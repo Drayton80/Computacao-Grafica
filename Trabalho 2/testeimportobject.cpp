@@ -1,26 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include <assimp/Importer.hpp>
-#include <assimp/camera.h>
-#include <assimp/config.h>
-#include <assimp/Defines.h>
-#include <assimp/Exporter.hpp>
-#include <assimp/mesh.h>
-#include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
-#include <assimp/camera.h>
-#include <assimp/metadata.h>
+#include <assimp/ai_assert.h>
 
-/*
-int loadObject(){
-	const aiScene* scene = aiImportFile("/home/drayton/Área de Trabalho/Computação Gráfica/Computacao-Grafica/Trabalho 2/Codes/monkey_head3.obj", aiProcessPreset_TargetRealtime_MaxQuality);
-}
-
-int main(){
-
-}
-*/
+using namespace std;
 
 
 int loadMesh(const std::string &file_name){
@@ -49,9 +34,9 @@ int loadMesh(const std::string &file_name){
 			for(unsigned int vertex_id = 0; vertex_id < mesh_ptr->mNumVertices; vertex_id += 3){
 				const aiVector3D *vertex_ptr = &mesh_ptr->mVertices[vertex_id];
 
-				//glm::dvec3 v0{ vertex_ptr[0].x, vertex_ptr[0].y, vertex_ptr[0].z };
-				//glm::dvec3 v1{ vertex_ptr[1].x, vertex_ptr[1].y, vertex_ptr[1].z };
-				//glm::dvec3 v2{ vertex_ptr[2].x, vertex_ptr[2].y, vertex_ptr[2].z };
+				glm::dvec3 v0{ vertex_ptr[0].x, vertex_ptr[0].y, vertex_ptr[0].z };
+				glm::dvec3 v1{ vertex_ptr[1].x, vertex_ptr[1].y, vertex_ptr[1].z };
+				glm::dvec3 v2{ vertex_ptr[2].x, vertex_ptr[2].y, vertex_ptr[2].z };
 
 				// Rest of the code here
 			}
