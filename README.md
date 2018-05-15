@@ -1,2 +1,2 @@
-# Computacao-Grafica
+# Trabalhos-LP2
 TO DO
