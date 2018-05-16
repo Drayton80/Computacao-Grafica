@@ -152,7 +152,7 @@ void mViewPort(float (*vectorScreenSpace)[4][1], float vectorCanonicalSpace[4][1
 // Esse pipeline faz a passagem dos vertices dos triângulos para o espaço de tela
 // sem aplicar uma multiplicação para condensar as matrizes de cada passagem de espaço
 // em uma só
-void pipeline(float (*output)[4][1], float (*input)[3][1], int width, int height){
+void pipeline(float (*output)[4][1], float input[3][1], int width, int height){
 	float    verticesObjectSpace[4][1],    verticesWorldSpace[4][1],
 		     verticesCameraSpace[4][1], verticesClippingSpace[4][1],
 		  verticesCanonicalSpace[4][1],   verticesScreenSpace[4][1];
@@ -165,7 +165,7 @@ void pipeline(float (*output)[4][1], float (*input)[3][1], int width, int height
 
 	// Aqui transformamos os pontos para o espaço homogêneo:
 	for(int i = 0; i <= 2; i++){
-		verticesObjectSpace[i][1] = (*input)[i][1] * homogeneosCoordinate;
+		verticesObjectSpace[i][1] = input[i][1] * homogeneosCoordinate;
 	}
 	// Adicionando a coordenada homogênea:
 	verticesObjectSpace[3][1] = homogeneosCoordinate;
