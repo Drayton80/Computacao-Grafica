@@ -216,9 +216,11 @@ void DrawLineColor(TypePixel p1, TypePixel p2, TypePixel p3){
 
 //Definimos aqui uma função que faz a criação de triângulos na tela, chamando 3 DrawLine
 void DrawTriangle(TypePixel p1, TypePixel p2, TypePixel p3){
-    DrawLine(p1, p2);
-    DrawLine(p2, p3);
-    DrawLine(p3, p1);
+    if(((p1.pX>=0)&&(p1.pY>=0))&&((p2.pX>=0)&&(p2.pY>=0))&&((p3.pX>=0)&&(p3.pY>=0))){
+        DrawLine(p1, p2);
+        DrawLine(p2, p3);
+        DrawLine(p3, p1);
+    }
 }
 
 //Definimos essa classe para colorir um triângulo com o uso da DrawLineColor, que é uma extensão da Drawline
