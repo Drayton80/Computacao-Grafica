@@ -17,8 +17,112 @@ unsigned int ViewPortHeight = 512;
 //-----------------------------------------------------------------------------
 void display(void)
 {
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	glFlush();
+
+	// ###################################################################### //
+	// #######################// EXIBINDO OS EIXOS \\######################## //
+
+	TypeColor colorAxisX;
+    colorAxisX.R = 255;
+    colorAxisX.G = 0;
+    colorAxisX.B = 0;
+    colorAxisX.A = 255;
+
+    TypeColor colorAxisY;
+    colorAxisY.R = 0;
+    colorAxisY.G = 255;
+    colorAxisY.B = 0;
+    colorAxisY.A = 255;
+
+    TypeColor colorAxisZ;
+    colorAxisZ.R = 0;
+    colorAxisZ.G = 0;
+    colorAxisZ.B = 255;
+    colorAxisZ.A = 255;
+
+    // Vértice pertencente aos eixos X, Y e Z:
+    double originPoint[3][1] = {{0},
+    				  		    {0},
+    						    {0}};
+
+    double axisPointX[3][1] = {{1},
+    						   {0},
+    						   {0}};
+
+    double axisPointY[3][1] = {{0},
+    						   {1},
+    						   {0}};
+
+    double axisPointZ[3][1] = {{0},
+    						   {0},
+    						   {1}};
+
+    // Pontos após sua passagem pelo pipeline gráfico:
+    double originPostPipeline[4][1];
+    double xPostPipeline[4][1];
+    double yPostPipeline[4][1];
+    double zPostPipeline[4][1];
+
+    // Passando os vértices para o pipeline:
+    //| std::cout << "Chegou até o pipeline \n";
+    pipeline(&originPostPipeline, &originPoint, IMAGE_WIDTH, IMAGE_HEIGHT);
+    pipeline(&xPostPipeline		, &axisPointX , IMAGE_WIDTH, IMAGE_HEIGHT);
+    pipeline(&yPostPipeline		, &axisPointY , IMAGE_WIDTH, IMAGE_HEIGHT);
+    pipeline(&zPostPipeline		, &axisPointZ , IMAGE_WIDTH, IMAGE_HEIGHT);
+
+    if(originPostPipeline[0][0] < IMAGE_WIDTH){
+    	originPostPipeline[0][0] = IMAGE_WIDTH;
+    }
+    if(originPostPipeline[1][0] < IMAGE_HEIGHT){
+    	originPostPipeline[1][0] = IMAGE_HEIGHT;
+    }
+    if(xPostPipeline[0][0] < IMAGE_WIDTH){
+    	xPostPipeline[0][0] = IMAGE_WIDTH;
+    }
+    if(xPostPipeline[1][0] < IMAGE_HEIGHT){
+    	xPostPipeline[1][0] = IMAGE_HEIGHT;
+    }
+    if(yPostPipeline[0][0] < IMAGE_WIDTH){
+    	yPostPipeline[0][0] = IMAGE_WIDTH;
+    }
+    if(yPostPipeline[1][0] < IMAGE_HEIGHT){
+    	yPostPipeline[1][0] = IMAGE_HEIGHT;
+    }
+    if(zPostPipeline[0][0] < IMAGE_WIDTH){
+    	zPostPipeline[0][0] = IMAGE_WIDTH;
+    }
+    if(zPostPipeline[1][0] < IMAGE_HEIGHT){
+    	zPostPipeline[1][0] = IMAGE_HEIGHT;
+    }
+
+
+    TypePixel origin, axisX, axisY, axisZ;
+
+    origin.pX 	 = (int) originPostPipeline[0][0];
+    origin.pY 	 = (int) originPostPipeline[1][0];
+    origin.color = colorAxisX;
+
+    axisX.pX 	= (int) xPostPipeline[0][0];
+    axisX.pY 	= (int) xPostPipeline[1][0];
+    axisX.color = colorAxisX;
+
+    axisY.pX 	= (int) yPostPipeline[0][0];
+    axisY.pY 	= (int) yPostPipeline[1][0];
+    axisY.color = colorAxisY;
+
+    axisZ.pX 	= (int) zPostPipeline[0][0];
+    axisZ.pY 	= (int) zPostPipeline[1][0];
+    axisZ.color = colorAxisZ;	
+
+    DrawLine(origin, axisX);
+    DrawLine(origin, axisY);
+    DrawLine(origin, axisZ);	
+
+	// ######################\\-------------------//######################### //
+	// ###################################################################### //
 
 	// Vértice pertencente aos triangulos do arquivo .obj:
     double vertexObj1[3][1];
@@ -29,64 +133,62 @@ void display(void)
     double vertexPostPipeline2[4][1];
     double vertexPostPipeline3[4][1];
 
-    std::cout << "Iniciando o FOR \n";
-    glBegin(GL_LINES);
-    	std::cout << "Entrou no GLLines \n";
-		for(int i=0; i<objData->faceCount; i++){
-		    std::cout << "\n\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&" << (i+1) << "ª Iteração do For &&&&&&&&&&&&&&&&&&&&&&&&& \n";
-		    std::cout << "Pegando o objeto \n";
-		    obj_face *o = objData->faceList[i];
+    //| std::cout << "Iniciando o FOR \n";
+	//| std::cout << "Entrou no GLLines \n";
+	for(int i=0; i<objData->faceCount; i++){
+	    //| std::cout << "\n\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&" << (i+1) << "ª Iteração do For &&&&&&&&&&&&&&&&&&&&&&&&& \n";
+	    //| std::cout << "Pegando o objeto \n";
+	    obj_face *o = objData->faceList[i];
 
-		    // Coordenadas de um vértice entregues pelo código de importação do .obj fornecido
-		    // pelo professor
-		    std::cout << "Chegou até os vértices \n";
-		    std::cout << "1 \n";
-		    vertexObj1[0][0] = objData->vertexList[o->vertex_index[0]]->e[0]; // Coordenada X
-		    vertexObj1[1][0] = objData->vertexList[o->vertex_index[0]]->e[1]; // Coordenada Y
-		    vertexObj1[2][0] = objData->vertexList[o->vertex_index[0]]->e[2]; // Coordenada Z
-		    std::cout << "2\n";
-		    vertexObj2[0][0] = objData->vertexList[o->vertex_index[1]]->e[0]; // Coordenada X
-		    vertexObj2[1][0] = objData->vertexList[o->vertex_index[1]]->e[1]; // Coordenada Y
-		    vertexObj2[2][0] = objData->vertexList[o->vertex_index[1]]->e[2]; // Coordenada Z
-		    std::cout << "3 \n";
-		    vertexObj3[0][0] = objData->vertexList[o->vertex_index[2]]->e[0]; // Coordenada X
-		    vertexObj3[1][0] = objData->vertexList[o->vertex_index[2]]->e[1]; // Coordenada Y
-		    vertexObj3[2][0] = objData->vertexList[o->vertex_index[2]]->e[2]; // Coordenada Z
+	    // Coordenadas de um vértice entregues pelo código de importação do .obj fornecido
+	    // pelo professor
+	    //| std::cout << "Chegou até os vértices \n";
+	    //| std::cout << "1 \n";
+	    vertexObj1[0][0] = objData->vertexList[o->vertex_index[0]]->e[0]; // Coordenada X
+	    vertexObj1[1][0] = objData->vertexList[o->vertex_index[0]]->e[1]; // Coordenada Y
+	    vertexObj1[2][0] = objData->vertexList[o->vertex_index[0]]->e[2]; // Coordenada Z
+	    //| std::cout << "2\n";
+	    vertexObj2[0][0] = objData->vertexList[o->vertex_index[1]]->e[0]; // Coordenada X
+	    vertexObj2[1][0] = objData->vertexList[o->vertex_index[1]]->e[1]; // Coordenada Y
+	    vertexObj2[2][0] = objData->vertexList[o->vertex_index[1]]->e[2]; // Coordenada Z
+	    //| std::cout << "3 \n";
+	    vertexObj3[0][0] = objData->vertexList[o->vertex_index[2]]->e[0]; // Coordenada X
+	    vertexObj3[1][0] = objData->vertexList[o->vertex_index[2]]->e[1]; // Coordenada Y
+	    vertexObj3[2][0] = objData->vertexList[o->vertex_index[2]]->e[2]; // Coordenada Z
 
-		    // Passando os vértices para o pipeline:
-		    std::cout << "Chegou até o pipeline \n";
-		    pipeline(&vertexPostPipeline1, &vertexObj1, IMAGE_WIDTH, IMAGE_HEIGHT);
-		    pipeline(&vertexPostPipeline2, &vertexObj2, IMAGE_WIDTH, IMAGE_HEIGHT);
-		    pipeline(&vertexPostPipeline3, &vertexObj3, IMAGE_WIDTH, IMAGE_HEIGHT);
+	    // Passando os vértices para o pipeline:
+	    //| std::cout << "Chegou até o pipeline \n";
+	    pipeline(&vertexPostPipeline1, &vertexObj1, IMAGE_WIDTH, IMAGE_HEIGHT);
+	    pipeline(&vertexPostPipeline2, &vertexObj2, IMAGE_WIDTH, IMAGE_HEIGHT);
+	    pipeline(&vertexPostPipeline3, &vertexObj3, IMAGE_WIDTH, IMAGE_HEIGHT);
 
-		    // Definindo a coloração:
-		    std::cout << "Chegou até as cores \n";
-		    TypeColor c1;
-		    c1.R = 255;
-		    c1.G = 255;
-		    c1.B = 255;
-		    c1.A = 255;
+	    // Definindo a coloração:
+	    //| std::cout << "Chegou até as cores \n";
+	    TypeColor c1;
+	    c1.R = 0;
+	    c1.G = 0;
+	    c1.B = 255;
+	    c1.A = 255;
 
-		    TypePixel p1, p2, p3;
+	    TypePixel p1, p2, p3;
 
-		    std::cout << "Instanciou os pontos \n";
-		    p1.pX = (int) vertexPostPipeline1[0][0];
-		    p1.pY = (int) vertexPostPipeline1[1][0];
-		    p1.color = c1;		
+	    //| std::cout << "Instanciou os pontos \n";
+	    p1.pX = (int) vertexPostPipeline1[0][0];
+	    p1.pY = (int) vertexPostPipeline1[1][0];
+	    p1.color = c1;		
 
-		    p2.pX = (int) vertexPostPipeline2[0][0];
-		    p2.pY = (int) vertexPostPipeline2[1][0];
-		    p2.color = c1;
-			
-		    p3.pX = (int) vertexPostPipeline3[0][0];
-		    p3.pY = (int) vertexPostPipeline3[1][0];
-		    p3.color = c1;
-			
-		    std::cout << "Desenhou os pontos \n";
-		    DrawTriangle(p1, p2, p3);
-		    std::cout << "Terminou de desenhar \n";
-		}
-    glEnd();
+	    p2.pX = (int) vertexPostPipeline2[0][0];
+	    p2.pY = (int) vertexPostPipeline2[1][0];
+	    p2.color = c1;
+		
+	    p3.pX = (int) vertexPostPipeline3[0][0];
+	    p3.pY = (int) vertexPostPipeline3[1][0];
+	    p3.color = c1;
+		
+	    //| std::cout << "Desenhou os pontos \n";
+	    DrawTriangle(p1, p2, p3);
+	    //| std::cout << "Terminou de desenhar \n";
+	}
 
 	glFlush();
 	glutSwapBuffers();

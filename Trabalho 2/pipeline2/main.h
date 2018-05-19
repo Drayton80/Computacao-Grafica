@@ -29,8 +29,13 @@ void InitOpenGL(int *argc, char **argv)
 	glutInitWindowSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 	glutInitWindowPosition(100,100);
 	glutCreateWindow("Trabalho 2 - Pipeline");
-	
 
+	// Ajusta a projeção ortográfica.
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
 }
 
 //*****************************************************************************
@@ -53,5 +58,14 @@ void InitDataStructures(void)
 		FBptr[i*4+2] = 0;
 		FBptr[i*4+3] = 255;
 	}
+
+	// Cria uma textura 2D, RGBA (8 bits por componente).
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_2D, tex);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
