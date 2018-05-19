@@ -5,50 +5,14 @@
 
 #include "definitions.h"
 #include "mygl.h"
+#include "objLoader.h"
+#include "graphicpipeline.h"
 
 GLuint tex;
 
 void (*DrawFunc)(void);
 
 //*****************************************************************************
-void display(void)
-{
-	DrawFunc();
-
-	// Copia o framebuffer para a textura.
-	glBindTexture(GL_TEXTURE_2D, tex);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE_WIDTH, IMAGE_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, FBptr);
-
-	glEnable(GL_TEXTURE_2D);
-
-	// Desenha o quadrilátero com a textura mapeada
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-
-	glViewport(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
-
-	glBegin(GL_TRIANGLES);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex3f(-1.0f,-1.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f);
-		glVertex3f( 1.0f, 1.0f, 0.0f);
-		glTexCoord2f(0.0f, 0.0f);
-		glVertex3f(-1.0f, 1.0f, 0.0f);
-		glTexCoord2f(0.0f, 1.0f);
-		glVertex3f(-1.0f,-1.0f, 0.0f);
-		glTexCoord2f(1.0f, 1.0f);
-		glVertex3f( 1.0f,-1.0f, 0.0f);
-		glTexCoord2f(1.0f, 0.0f);	
-		glVertex3f( 1.0f, 1.0f, 0.0f);
-	glEnd();
-	
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glDisable(GL_TEXTURE_2D);
-
-	glFlush();
-	glutSwapBuffers();
-	glutPostRedisplay();
-}
 
 //*****************************************************************************
 void exitprog(void)
@@ -81,7 +45,6 @@ void InitOpenGL(int *argc, char **argv)
 void InitCallBacks(void)
 {
 	atexit( exitprog );
-	glutDisplayFunc(display);
 }
 
 //*****************************************************************************

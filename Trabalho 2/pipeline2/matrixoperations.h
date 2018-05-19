@@ -43,6 +43,35 @@ void multiplication(double (*matrixResult)[4][4], double (*matrix1)[4][4], doubl
   	int coluns = sizeof (*matrix2)[0] / sizeof(double);
 
 	for(int i = 0; i < lines; i++){
+		std::cout << "[ ";
+		for(int j = 0; j < coluns; j++){
+			// Inicializa o valor com 0 para poder fazer a soma do +=			
+			// Para testes:
+			std::cout << (*matrix1)[i][j] << " ";
+		}
+		// Para testes:
+		std::cout << " ]";
+
+		std::cout << " ]\n";
+	}
+
+	for(int i = 0; i < lines; i++){
+		std::cout << "[ ";
+		for(int j = 0; j < coluns; j++){
+			// Inicializa o valor com 0 para poder fazer a soma do +=			
+			// Para testes:
+			std::cout << (*matrix2)[i][j] << " ";
+		}
+		// Para testes:
+		std::cout << " ]";
+
+		std::cout << " ]\n";
+	}
+
+	std::cout << " = ";
+
+	for(int i = 0; i < lines; i++){
+		std::cout << "   [ ";
 		for(int j = 0; j < coluns; j++){
 			// Inicializa o valor com 0 para poder fazer a soma do +=
 			(*matrixResult)[i][j] = 0;
@@ -50,8 +79,14 @@ void multiplication(double (*matrixResult)[4][4], double (*matrix1)[4][4], doubl
 			for(int k = 0; k < coluns; k++){
 				(*matrixResult)[i][j] += (*matrix1)[i][k] * (*matrix2)[k][j];
 			}
+			// Para testes:
+			std::cout << (*matrixResult)[i][j];
 		}
+		// Para testes:
+		std::cout << " ]\n";
 	}
+
+	std::cout << "----------------------------\n";
 }
 
 // Multiplica uma matriz com um vetor, ambos do tipo double:

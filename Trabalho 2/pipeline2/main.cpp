@@ -33,7 +33,7 @@ void display(void)
     glBegin(GL_LINES);
     	std::cout << "Entrou no GLLines \n";
 		for(int i=0; i<objData->faceCount; i++){
-		    std::cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&" << (i+1) << "ª Iteração do For &&&&&&&&&&&&&&&&&&&&&&&&& \n";
+		    std::cout << "\n\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&" << (i+1) << "ª Iteração do For &&&&&&&&&&&&&&&&&&&&&&&&& \n";
 		    std::cout << "Pegando o objeto \n";
 		    obj_face *o = objData->faceList[i];
 
@@ -41,17 +41,17 @@ void display(void)
 		    // pelo professor
 		    std::cout << "Chegou até os vértices \n";
 		    std::cout << "1 \n";
-		    vertexObj1[0][1] = objData->vertexList[o->vertex_index[0]]->e[0]; // Coordenada X
-		    vertexObj1[1][1] = objData->vertexList[o->vertex_index[0]]->e[1]; // Coordenada Y
-		    vertexObj1[2][1] = objData->vertexList[o->vertex_index[0]]->e[2]; // Coordenada Z
+		    vertexObj1[0][0] = objData->vertexList[o->vertex_index[0]]->e[0]; // Coordenada X
+		    vertexObj1[1][0] = objData->vertexList[o->vertex_index[0]]->e[1]; // Coordenada Y
+		    vertexObj1[2][0] = objData->vertexList[o->vertex_index[0]]->e[2]; // Coordenada Z
 		    std::cout << "2\n";
-		    vertexObj2[0][1] = objData->vertexList[o->vertex_index[1]]->e[0]; // Coordenada X
-		    vertexObj2[1][1] = objData->vertexList[o->vertex_index[1]]->e[1]; // Coordenada Y
-		    vertexObj2[2][1] = objData->vertexList[o->vertex_index[1]]->e[2]; // Coordenada Z
+		    vertexObj2[0][0] = objData->vertexList[o->vertex_index[1]]->e[0]; // Coordenada X
+		    vertexObj2[1][0] = objData->vertexList[o->vertex_index[1]]->e[1]; // Coordenada Y
+		    vertexObj2[2][0] = objData->vertexList[o->vertex_index[1]]->e[2]; // Coordenada Z
 		    std::cout << "3 \n";
-		    vertexObj3[0][1] = objData->vertexList[o->vertex_index[2]]->e[0]; // Coordenada X
-		    vertexObj3[1][1] = objData->vertexList[o->vertex_index[2]]->e[1]; // Coordenada Y
-		    vertexObj3[2][1] = objData->vertexList[o->vertex_index[2]]->e[2]; // Coordenada Z
+		    vertexObj3[0][0] = objData->vertexList[o->vertex_index[2]]->e[0]; // Coordenada X
+		    vertexObj3[1][0] = objData->vertexList[o->vertex_index[2]]->e[1]; // Coordenada Y
+		    vertexObj3[2][0] = objData->vertexList[o->vertex_index[2]]->e[2]; // Coordenada Z
 
 		    // Passando os vértices para o pipeline:
 		    std::cout << "Chegou até o pipeline \n";
@@ -70,16 +70,16 @@ void display(void)
 		    TypePixel p1, p2, p3;
 
 		    std::cout << "Instanciou os pontos \n";
-		    p1.pX = (int) vertexPostPipeline1[0][1];
-		    p1.pY = (int) vertexPostPipeline1[1][1];
+		    p1.pX = (int) vertexPostPipeline1[0][0];
+		    p1.pY = (int) vertexPostPipeline1[1][0];
 		    p1.color = c1;		
 
-		    p2.pX = (int) vertexPostPipeline2[0][1];
-		    p2.pY = (int) vertexPostPipeline2[1][1];
+		    p2.pX = (int) vertexPostPipeline2[0][0];
+		    p2.pY = (int) vertexPostPipeline2[1][0];
 		    p2.color = c1;
 			
-		    p3.pX = (int) vertexPostPipeline3[0][1];
-		    p3.pY = (int) vertexPostPipeline3[1][1];
+		    p3.pX = (int) vertexPostPipeline3[0][0];
+		    p3.pY = (int) vertexPostPipeline3[1][0];
 		    p3.color = c1;
 			
 		    std::cout << "Desenhou os pontos \n";

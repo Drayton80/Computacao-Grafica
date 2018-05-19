@@ -14,6 +14,7 @@ void mModel(double (*vectorWorldSpace)[4][1], double (*vectorObjectSpace)[4][1])
 							    { 0,  0,  0,  1}};
 
     // Transformação do espaço de objeto para o do universo:
+    std::cout << "\n @@ Aplicação da Matrix Model @@ \n";
 	multiplication(vectorWorldSpace, &matrixModel, vectorObjectSpace);
 }
 
@@ -28,18 +29,19 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 						   {lookAt[1] - cameraPosition[1]},
 						   {lookAt[2] - cameraPosition[2]}};
 	// Obtendo o módulo do vetor d (direction):
-	double moduloVetor = sqrt((dVector[0][1]*dVector[0][1]) + (dVector[1][1]*dVector[1][1]) + (dVector[2][1]*dVector[2][1]));
-	std::cout << "dVector[0][1]: " << (dVector[0][1]*dVector[0][1]) << " = " << dVector[0][1] << " * " << dVector[0][1] << "\n";
-	std::cout << "dVector[1][1]: " << (dVector[1][1]*dVector[1][1]) << " = " << dVector[1][1] << " * " << dVector[1][1] << "\n";
-	std::cout << "dVector[2][1]: " << (dVector[2][1]*dVector[2][1]) << " = " << dVector[2][1] << " * " << dVector[2][1] << "\n";
+	double moduloVetor = sqrt((dVector[0][0]*dVector[0][0]) + (dVector[1][0]*dVector[1][0]) + (dVector[2][0]*dVector[2][0]));
+	std::cout << "dVector[0][0]: " << (dVector[0][0]*dVector[0][0]) << " = " << dVector[0][0] << " * " << dVector[0][0] << "\n";
+	std::cout << "dVector[1][0]: " << (dVector[1][0]*dVector[1][0]) << " = " << dVector[1][0] << " * " << dVector[1][0] << "\n";
+	std::cout << "dVector[2][0]: " << (dVector[2][0]*dVector[2][0]) << " = " << dVector[2][0] << " * " << dVector[2][0] << "\n";
 	std::cout << "Modulo do Vetor = " << moduloVetor << "\n";
 	// vetor referente ao eixo z da camera:
 	double zCamera[3][1]; 
 	// zc = - (d/|d|)
+	std::cout << "Divisão do zCamera: \n";
 	division(&zCamera, &dVector, moduloVetor);
-	zCamera[0][1] = -zCamera[0][1];
-	zCamera[1][1] = -zCamera[1][1];
-	zCamera[2][1] = -zCamera[2][1];
+	zCamera[0][0] = -zCamera[0][0];
+	zCamera[1][0] = -zCamera[1][0];
+	zCamera[2][0] = -zCamera[2][0];
 
 	// EIXO X DA CAMERA:
 	// Instanciando o vetor up
@@ -48,62 +50,116 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 						    {up[2]}};
     // Vetor que resulta do produto vetorial:
 	double vetorProdutoVetorial[3][1];
+	std::cout << "Produto vetorial para o xCamera: \n";
 	produtoVetorial(&vetorProdutoVetorial, vetorUp, zCamera);
+
+	// Se a coordenada estiver abaixo de 1e-160 (valor aproximado) e acima de 0, sua multiplicação ao quadrado
+	// (feita no moduloVetor) resultaria em 0 devido ao tão baixo valor que ultrapassaria o
+	// limite suportado de um double, resultando em uma posterior divisão por 0 para gerar
+	// o vetor unitário. Isso é uma contramedida feita para contornar isso e limitar os valores
+	if((1e-160 > vetorProdutoVetorial[0][0]) && (vetorProdutoVetorial[0][0] > 0) ){
+		vetorProdutoVetorial[0][0] = 1e-160;
+	}
+	if((1e-160 > vetorProdutoVetorial[1][0]) && (vetorProdutoVetorial[1][0] > 0) ){
+		vetorProdutoVetorial[1][0] = 1e-160;
+	}
+	if((1e-160 > vetorProdutoVetorial[2][0]) && (vetorProdutoVetorial[2][0] > 0) ){
+		vetorProdutoVetorial[2][0] = 1e-160;
+	}
+	// A mesma coisa ocorre com valores acima de -1e-160 (aproximado) e abaixo de 0
+	if((-1e-160 < vetorProdutoVetorial[0][0]) && (vetorProdutoVetorial[0][0] < 0) ){
+		vetorProdutoVetorial[0][0] = -1e-160;
+	}
+	if((-1e-160 < vetorProdutoVetorial[1][0]) && (vetorProdutoVetorial[1][0] < 0) ){
+		vetorProdutoVetorial[1][0] = -1e-160;
+	}
+	if((-1e-160 < vetorProdutoVetorial[2][0]) && (vetorProdutoVetorial[2][0] < 0) ){
+		vetorProdutoVetorial[2][0] = -1e-160;
+	}
+
 	// Pegando o módulo desse vetor para poder fazer o eixo unitário:
-	std::cout << "vetorProdutoVetorial[0][1] = " << vetorProdutoVetorial[0][1] << "\n";
-	std::cout << "vetorProdutoVetorial[1][1] = " << vetorProdutoVetorial[1][1] << "\n";
-	std::cout << "vetorProdutoVetorial[2][1] = " << vetorProdutoVetorial[2][1] << "\n";
-	moduloVetor = sqrt((vetorProdutoVetorial[0][1]*vetorProdutoVetorial[0][1]) + 
-					   (vetorProdutoVetorial[1][1]*vetorProdutoVetorial[1][1]) + 
-					   (vetorProdutoVetorial[2][1]*vetorProdutoVetorial[2][1]));
+	std::cout << "vetorProdutoVetorial[0][0] = " << vetorProdutoVetorial[0][0] << "\n";
+	std::cout << "vetorProdutoVetorial[1][0] = " << vetorProdutoVetorial[1][0] << "\n";
+	std::cout << "vetorProdutoVetorial[2][0] = " << vetorProdutoVetorial[2][0] << "\n";
+	moduloVetor = sqrt((vetorProdutoVetorial[0][0]*vetorProdutoVetorial[0][0]) + 
+					   (vetorProdutoVetorial[1][0]*vetorProdutoVetorial[1][0]) + 
+					   (vetorProdutoVetorial[2][0]*vetorProdutoVetorial[2][0]));
 
 	// Essa condição foi necessária pois há momentos em que os valores das coordenadas do vetorProdutoVetorial
 	// são tá pequenas (ex.: 3.1e-307) que quando elevados ao quadrado dentro do cálculo para o moduloVetor resultam
 	// em 0, fazendo com que moduloVetor acabe recebendo 0 e, assim, posteriormente quando dividimos o vetorProdutoVetorial
 	// por moduloVetor acabe resultando no valor "nan", não desejado
-	if(moduloVetor == 0){
-		moduloVetor = 2.2e-322;
-	}
+	//if(moduloVetor == 0){
+	//	moduloVetor = 2.2e-322;
+	//}
 
-	std::cout << "vetorProdutoVetorial[0][1]²: " << (vetorProdutoVetorial[0][1]*vetorProdutoVetorial[0][1]) << " = " 
-												 << vetorProdutoVetorial[0][1] << " * " << vetorProdutoVetorial[0][1] 
+	std::cout << "vetorProdutoVetorial[0][0]²: " << (vetorProdutoVetorial[0][0]*vetorProdutoVetorial[0][0]) << " = " 
+												 << vetorProdutoVetorial[0][0] << " * " << vetorProdutoVetorial[0][0] 
 												 << "\n";
-	std::cout << "vetorProdutoVetorial[1][1]²: " << (vetorProdutoVetorial[1][1]*vetorProdutoVetorial[1][1]) << " = " 
-												 << vetorProdutoVetorial[1][1] << " * " << vetorProdutoVetorial[1][1] 
+	std::cout << "vetorProdutoVetorial[1][0]²: " << (vetorProdutoVetorial[1][0]*vetorProdutoVetorial[1][0]) << " = " 
+												 << vetorProdutoVetorial[1][0] << " * " << vetorProdutoVetorial[1][0] 
 												 << "\n";
-	std::cout << "vetorProdutoVetorial[2][1]²: " << (vetorProdutoVetorial[2][1]*vetorProdutoVetorial[2][1]) << " = " 
-												 << vetorProdutoVetorial[2][1] << " * " << vetorProdutoVetorial[2][1] 
+	std::cout << "vetorProdutoVetorial[2][0]²: " << (vetorProdutoVetorial[2][0]*vetorProdutoVetorial[2][0]) << " = " 
+												 << vetorProdutoVetorial[2][0] << " * " << vetorProdutoVetorial[2][0] 
 												 << "\n";
 	std::cout << "Modulo do Vetor = " << moduloVetor << "\n";
 	// Vetor referente ao eixo x da camera:
 	double xCamera[3][1];
 	// xc = (ucXzc)/|ucXzc|
+	std::cout << "Divisão do xCamera: \n";
 	division(&xCamera, &vetorProdutoVetorial, moduloVetor);
 
 	// EIXO Y DA CAMERA:
     // Vetor que resulta do produto vetorial:
+    std::cout << "Produto vetorial do yCamera: \n";
 	produtoVetorial(&vetorProdutoVetorial, zCamera, xCamera);
+
+	// Se a coordenada estiver abaixo de 1e-160 (valor aproximado) e acima de 0, sua multiplicação ao quadrado
+	// (feita no moduloVetor) resultaria em 0 devido ao tão baixo valor que ultrapassaria o
+	// limite suportado de um double, resultando em uma posterior divisão por 0 para gerar
+	// o vetor unitário. Isso é uma contramedida feita para contornar isso e limitar os valores
+	if((1e-160 > vetorProdutoVetorial[0][0]) && (vetorProdutoVetorial[0][0] > 0) ){
+		vetorProdutoVetorial[0][0] = 1e-160;
+	}
+	if((1e-160 > vetorProdutoVetorial[1][0]) && (vetorProdutoVetorial[1][0] > 0) ){
+		vetorProdutoVetorial[1][0] = 1e-160;
+	}
+	if((1e-160 > vetorProdutoVetorial[2][0]) && (vetorProdutoVetorial[2][0] > 0) ){
+		vetorProdutoVetorial[2][0] = 1e-160;
+	}
+	// A mesma coisa ocorre com valores acima de -1e-160 (aproximado) e abaixo de 0
+	if((-1e-160 < vetorProdutoVetorial[0][0]) && (vetorProdutoVetorial[0][0] < 0) ){
+		vetorProdutoVetorial[0][0] = -1e-160;
+	}
+	if((-1e-160 < vetorProdutoVetorial[1][0]) && (vetorProdutoVetorial[1][0] < 0) ){
+		vetorProdutoVetorial[1][0] = -1e-160;
+	}
+	if((-1e-160 < vetorProdutoVetorial[2][0]) && (vetorProdutoVetorial[2][0] < 0) ){
+		vetorProdutoVetorial[2][0] = -1e-160;
+	}
+
 	// Pegando o módulo desse vetor para poder fazer o eixo unitário:
-	moduloVetor = sqrt((vetorProdutoVetorial[0][1]*vetorProdutoVetorial[0][1]) + 
-					   (vetorProdutoVetorial[1][1]*vetorProdutoVetorial[1][1]) + 
-					   (vetorProdutoVetorial[2][1]*vetorProdutoVetorial[2][1]));
+	moduloVetor = sqrt((vetorProdutoVetorial[0][0]*vetorProdutoVetorial[0][0]) + 
+					   (vetorProdutoVetorial[1][0]*vetorProdutoVetorial[1][0]) + 
+					   (vetorProdutoVetorial[2][0]*vetorProdutoVetorial[2][0]));
 
 	// Essa condição foi necessária pois há momentos em que os valores das coordenadas do vetorProdutoVetorial
 	// são tá pequenas (ex.: 3.1e-307) que quando elevados ao quadrado dentro do cálculo para o moduloVetor resultam
 	// em 0, fazendo com que moduloVetor acabe recebendo 0 e, assim, posteriormente quando dividimos o vetorProdutoVetorial
 	// por moduloVetor acabe resultando no valor "nan", não desejado
-	if(moduloVetor == 0){
-		moduloVetor = 2.2e-322;
-	}
+	//if(moduloVetor == 0){
+	//	moduloVetor = 2.2e-300;
+	//}
 	// Vetor referente ao eixo y da camera:
 	double yCamera[3][1];
 	// xc = (ucXzc)/|ucXzc|
+	std::cout << "Divisão do yCamera: \n";
 	division(&yCamera, &vetorProdutoVetorial, moduloVetor);
 
 	// CONSTRUINDO A MATRIX VIEW:
-	double matrixBt [4][4] = {{ xCamera[0][1],  xCamera[1][1],  xCamera[2][1],  0},
-							 { yCamera[0][1],  yCamera[1][1],  yCamera[2][1],  0},
-							 { zCamera[0][1],  zCamera[1][1],  zCamera[2][1],  0},
+	double matrixBt [4][4] = {{ xCamera[0][0],  xCamera[1][0],  xCamera[2][0],  0},
+							 { yCamera[0][0],  yCamera[1][0],  yCamera[2][0],  0},
+							 { zCamera[0][0],  zCamera[1][0],  zCamera[2][0],  0},
 							 {       0      ,        0      ,        0      ,  1}};
 
 	double matrixTrasposicao [4][4] = {{ 1,  0,  0, -cameraPosition[0]},
@@ -116,6 +172,7 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
    	multiplication(&matrixView, &matrixBt, &matrixTrasposicao);
 
    	// transformação do espaço do universo para o de camera:
+   	std::cout << "\n @@ Aplicação da Matrix View @@ \n";
    	multiplication(vectorCameraSpace, &matrixView, vectorWorldSpace);
 
 }
@@ -139,9 +196,11 @@ void mProjection(double (*vectorClippingSpace)[4][1], double (*vectorCameraSpace
   	// Para obter a matriz de projeção basta multiplicar uma matriz
     // pela outra e, assim, combiná-las
     double matrixProjection[4][4];
+    std::cout << "Combinação das Matrizes P e T: \n";
     multiplication(&matrixProjection, &matrixP, &matrixT);
 
     // por fim, aplica-se a transformação do espaço de camera para o de recorte
+    std::cout << "\n @@ Aplicação da Matrix Projection @@ \n";
 	multiplication(vectorClippingSpace, &matrixProjection, vectorCameraSpace);
 }
 
@@ -176,10 +235,13 @@ void mViewPort(double (*vectorScreenSpace)[4][1], double (*vectorCanonicalSpace)
   	// Para obter a matriz view port basta multiplicar as matrizes obtidas
     double matrixViewPort[4][4];
     double auxMatrixVP[4][4];
+    std::cout << "Multiplicação da matrixScale e matrixInvertion: \n";
     multiplication(&auxMatrixVP, &matrixScale, &matrixInvertion);
+    std::cout << "Multiplicação da matrixTranslation e matrixVP: \n";
     multiplication(&matrixViewPort, &matrixTranslation, &auxMatrixVP);
 
     // por fim, aplica-se a transformação do espaço canonico para o de tela
+    std::cout << "\n @@ Aplicação da Matrix View Port @@ \n";
 	multiplication(vectorScreenSpace, &matrixViewPort, vectorCanonicalSpace);
 }
 
@@ -205,16 +267,21 @@ void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int heig
 	verticesObjectSpace[3][1] = homogeneosCoordinate;
 
 	// Aplicando a matrix model:
+	std::cout << "Iniciando mModel: \n";
 	mModel(&verticesWorldSpace, &verticesObjectSpace);
 	// Aplicando a matrix view:
+	std::cout << "Iniciando mView: \n";
 	mView(&verticesCameraSpace, &verticesWorldSpace, lookAt, up, cameraPosition);
 	// Aplicando a matrix projection:
+	std::cout << "Iniciando mProjection: \n";
 	mProjection(&verticesClippingSpace, &verticesCameraSpace, distanceNearPlane);
 	// Em seguida é preciso dividir os valores pela coordenada homogênea que leva para
 	// o espaço canônico
+	std::cout << "Iniciando divisão do espaço Canônico: \n";
 	division(&verticesCanonicalSpace, &verticesClippingSpace, -1/distanceNearPlane);
 	// Por fim, apenas foi necessário passar pelo último estágio do pipeline ao aplicar
 	// a matriz view port
+	std::cout << "Iniciando mViewPort: \n";
 	mViewPort(output, &verticesCanonicalSpace, width, height);
 }
 
