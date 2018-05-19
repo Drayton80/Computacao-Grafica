@@ -70,15 +70,18 @@ void display(void)
 		    TypePixel p1, p2, p3;
 
 		    std::cout << "Instanciou os pontos \n";
-		    p1.pX = vertexPostPipeline1[0][1];
-		    p1.pY = vertexPostPipeline1[1][1];
+		    p1.pX = (int) vertexPostPipeline1[0][1];
+		    p1.pY = (int) vertexPostPipeline1[1][1];
+		    p1.color = c1;		
 
-		    p2.pX = vertexPostPipeline2[0][1];
-		    p2.pY = vertexPostPipeline2[1][1];
-
-		    p3.pX = vertexPostPipeline3[0][1];
-		    p3.pY = vertexPostPipeline3[1][1];
-
+		    p2.pX = (int) vertexPostPipeline2[0][1];
+		    p2.pY = (int) vertexPostPipeline2[1][1];
+		    p2.color = c1;
+			
+		    p3.pX = (int) vertexPostPipeline3[0][1];
+		    p3.pY = (int) vertexPostPipeline3[1][1];
+		    p3.color = c1;
+			
 		    std::cout << "Desenhou os pontos \n";
 		    DrawTriangle(p1, p2, p3);
 		    std::cout << "Terminou de desenhar \n";
