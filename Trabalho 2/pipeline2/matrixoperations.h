@@ -50,8 +50,6 @@ void multiplication(double (*matrixResult)[4][4], double (*matrix1)[4][4], doubl
 			std::cout << (*matrix1)[i][j] << " ";
 		}
 		// Para testes:
-		std::cout << " ]";
-
 		std::cout << " ]\n";
 	}
 
@@ -63,8 +61,6 @@ void multiplication(double (*matrixResult)[4][4], double (*matrix1)[4][4], doubl
 			std::cout << (*matrix2)[i][j] << " ";
 		}
 		// Para testes:
-		std::cout << " ]";
-
 		std::cout << " ]\n";
 	}
 
@@ -80,7 +76,7 @@ void multiplication(double (*matrixResult)[4][4], double (*matrix1)[4][4], doubl
 				(*matrixResult)[i][j] += (*matrix1)[i][k] * (*matrix2)[k][j];
 			}
 			// Para testes:
-			std::cout << (*matrixResult)[i][j];
+			std::cout << (*matrixResult)[i][j] << " ";
 		}
 		// Para testes:
 		std::cout << " ]\n";

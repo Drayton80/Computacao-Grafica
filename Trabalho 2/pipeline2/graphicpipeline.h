@@ -38,10 +38,15 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 	double zCamera[3][1]; 
 	// zc = - (d/|d|)
 	std::cout << "Divisão do zCamera: \n";
+	std::cout << "\n|------------------- Coordenada z da Camera ---------------------| \n";
 	division(&zCamera, &dVector, moduloVetor);
 	zCamera[0][0] = -zCamera[0][0];
+	std::cout << "[ " << zCamera[0][0] << " ]\n";
 	zCamera[1][0] = -zCamera[1][0];
+	std::cout << "[ " << zCamera[1][0] << " ]\n";
 	zCamera[2][0] = -zCamera[2][0];
+	std::cout << "[ " << zCamera[2][0] << " ]\n";
+	std::cout <<   "|----------------------------------------------------------------| \n";
 
 	// EIXO X DA CAMERA:
 	// Instanciando o vetor up
@@ -107,7 +112,9 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 	double xCamera[3][1];
 	// xc = (ucXzc)/|ucXzc|
 	std::cout << "Divisão do xCamera: \n";
+	std::cout << "\n|------------------- Coordenada x da Camera ---------------------| \n";
 	division(&xCamera, &vetorProdutoVetorial, moduloVetor);
+	std::cout <<   "|----------------------------------------------------------------| \n";
 
 	// EIXO Y DA CAMERA:
     // Vetor que resulta do produto vetorial:
@@ -154,7 +161,9 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 	double yCamera[3][1];
 	// xc = (ucXzc)/|ucXzc|
 	std::cout << "Divisão do yCamera: \n";
+	std::cout << "\n|------------------- Coordenada y da Camera ---------------------| \n";
 	division(&yCamera, &vetorProdutoVetorial, moduloVetor);
+	std::cout <<   "|----------------------------------------------------------------| \n";
 
 	// CONSTRUINDO A MATRIX VIEW:
 	double matrixBt [4][4] = {{ xCamera[0][0],  xCamera[1][0],  xCamera[2][0],  0},
@@ -188,10 +197,10 @@ void mProjection(double (*vectorClippingSpace)[4][1], double (*vectorCameraSpace
 						    { 0,  0,  0,  1}};
 
     // Essa matriz efetivamente aplica a distorção projetiva
-    double matrixP [4][4] = {{ 1,  0,  0 ,  0},
-						    { 0,  1,  0 ,  0},
-						    { 0,  0,  1 ,  0},
-						    { 0,  0,-1/d,  1}};
+    double matrixP [4][4] = {{ 1,  0,  0  ,  0},
+						     { 0,  1,  0  ,  0},
+						     { 0,  0,  1  ,  0},
+						     { 0,  0,(-1/d),  1}};
 
   	// Para obter a matriz de projeção basta multiplicar uma matriz
     // pela outra e, assim, combiná-las
@@ -241,30 +250,31 @@ void mViewPort(double (*vectorScreenSpace)[4][1], double (*vectorCanonicalSpace)
     multiplication(&matrixViewPort, &matrixTranslation, &auxMatrixVP);
 
     // por fim, aplica-se a transformação do espaço canonico para o de tela
-    std::cout << "\n @@ Aplicação da Matrix View Port @@ \n";
+    std::cout << "\n@-------------------@ Aplicação da Matrix View Port @---------------------@ \n";
 	multiplication(vectorScreenSpace, &matrixViewPort, vectorCanonicalSpace);
+	std::cout <<   "@-------------------@-------------------------------@---------------------@ \n";
 }
 
 // Esse pipeline faz a passagem dos vertices dos triângulos para o espaço de tela
 // sem aplicar uma multiplicação para condensar as matrizes de cada passagem de espaço
 // em uma só
 void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int height){
-	double    verticesObjectSpace[4][1],    verticesWorldSpace[4][1],
-		     verticesCameraSpace[4][1], verticesClippingSpace[4][1],
-		  verticesCanonicalSpace[4][1];
+	double verticesObjectSpace[4][1],    verticesWorldSpace[4][1],
+		   verticesCameraSpace[4][1], verticesClippingSpace[4][1],
+		   verticesCanonicalSpace[4][1];
 	double cameraPosition[3] = {0, 0, 1};
 	double lookAt[3] 		= {0, 0, 0};
 	double up[3] 			= {0, 1, 0};
 	double homogeneosCoordinate = 1;
-	double distanceNearPlane = 1;
+	double distanceNearPlane = 2;
 	
 
 	// Aqui transformamos os pontos para o espaço homogêneo:
 	for(int i = 0; i <= 2; i++){
-		verticesObjectSpace[i][1] = (*input)[i][1] * homogeneosCoordinate;
+		verticesObjectSpace[i][0] = (*input)[i][0] * homogeneosCoordinate;
 	}
 	// Adicionando a coordenada homogênea:
-	verticesObjectSpace[3][1] = homogeneosCoordinate;
+	verticesObjectSpace[3][0] = homogeneosCoordinate;
 
 	// Aplicando a matrix model:
 	std::cout << "Iniciando mModel: \n";
