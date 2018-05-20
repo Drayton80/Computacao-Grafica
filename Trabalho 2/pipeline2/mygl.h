@@ -47,12 +47,13 @@ void PutPixel(TypePixel p){
 //que estão sendo coloridos com a função PutPixel, para isso foi preciso usar o algoritmo
 //de Bresenham
 void DrawLine(TypePixel p1, TypePixel p2){
-
+    std::cout << "Instanciações: \n";
     //Primeiro vamos calcular o Delta entre os pontos
     int dX = (p2.pX - p1.pX);
     int dY = (p2.pY - p1.pY);
     int nAux, x, y, tX = 1, tY = 1, cont;
 
+    std::cout << "if dx e dy \n";
     //Aqui é onde verificamos se os deltas são negativos e fazemos a correção
     if(dX < 0){
         tX = -tX;
@@ -61,10 +62,14 @@ void DrawLine(TypePixel p1, TypePixel p2){
         tY = -tY;
     }
 
+    
     dX = abs(dX);
+    std::cout << "dX = " << dX << "\n";
     dY = abs(dY);
+    std::cout << "dY = " << dY << "\n";
 
-    //Agora vamos definir auxiliares para os pontos X e Y do Pixel inicial
+    //Agostd::cout << "dY = abs(dY) \n";ra vamos definir auxiliares para os pontos X e Y do Pixel inicial
+    std::cout << "x = p1.px \n";
     x = p1.pX;
     y = p1.pY;
 
@@ -73,13 +78,15 @@ void DrawLine(TypePixel p1, TypePixel p2){
     TypeColor cR;
 
     //Aqui nós definimos a intensidade em que iremos fazer a interpolação das cores
+    std::cout << "fR e fB \n";
     float   fR = (p2.color.R - p1.color.R), fG = (p2.color.G - p1.color.G),
             fB = (p2.color.B - p1.color.B), fA = (p2.color.A - p1.color.A);
 
+    std::cout << "aux.color = p1.color \n";
     aux.color = p1.color;
 
     //----------------------------------------------
-
+    std::cout << "if(dx > dy) \n";
     if(dX > dY){
         nAux = (dY << 1) - dX;//Movemos então os bits uma vez para a esquerda e subtraimos o dX
         fR /= dX; fG /= dX; fB /= dX; fA /= dX;//Aqui é onde começa a interpolação das cores nas linhas
@@ -91,7 +98,10 @@ void DrawLine(TypePixel p1, TypePixel p2){
             aux.color.A += fA;
             //---------------------
             aux.pX = x;
+            std::cout << "valor de x: " << x << "\n";
             aux.pY = y;
+            std::cout << "valor de y: " << y << "\n";
+            std::cout << "If - Iteração nº " << cont << " - PutPixel(aux) \n";
             PutPixel(aux);//Adicionando o novo pixel para formação da linha
             if(nAux < 0){
                 nAux += (dY << 1);
@@ -112,7 +122,10 @@ void DrawLine(TypePixel p1, TypePixel p2){
             aux.color.A += fA;
             //------------------------
             aux.pX = x;
+            std::cout << "valor de x: " << x << "\n";
             aux.pY = y;
+            std::cout << "valor de y: " << y << "\n";
+            std::cout << "else - Iteração nº " << cont << " - PutPixel(aux) \n";
             PutPixel(aux);
             if(nAux < 0){
                 nAux += (dX << 1);
@@ -216,13 +229,9 @@ void DrawLineColor(TypePixel p1, TypePixel p2, TypePixel p3){
 
 //Definimos aqui uma função que faz a criação de triângulos na tela, chamando 3 DrawLine
 void DrawTriangle(TypePixel p1, TypePixel p2, TypePixel p3){
-    if(((p1.pX>=0 && p1.pX<=IMAGE_WIDTH) && (p1.pY>=0 && p1.pY<=IMAGE_HEIGHT)) &&
-       ((p2.pX>=0 && p2.pX<=IMAGE_WIDTH) && (p2.pY>=0 && p2.pY<=IMAGE_HEIGHT)) &&
-       ((p3.pX>=0 && p3.pX<=IMAGE_WIDTH) && (p3.pY>=0 && p3.pY<=IMAGE_HEIGHT)) ){
-        DrawLine(p1, p2);
-        DrawLine(p2, p3);
-        DrawLine(p3, p1);
-    }
+    DrawLine(p1, p2);
+    DrawLine(p2, p3);
+    DrawLine(p3, p1);
 }
 
 //Definimos essa classe para colorir um triângulo com o uso da DrawLineColor, que é uma extensão da Drawline

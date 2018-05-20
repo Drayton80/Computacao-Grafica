@@ -73,32 +73,6 @@ void display(void)
     pipeline(&yPostPipeline		, &axisPointY , IMAGE_WIDTH, IMAGE_HEIGHT);
     pipeline(&zPostPipeline		, &axisPointZ , IMAGE_WIDTH, IMAGE_HEIGHT);
 
-    if(originPostPipeline[0][0] < IMAGE_WIDTH){
-    	originPostPipeline[0][0] = IMAGE_WIDTH;
-    }
-    if(originPostPipeline[1][0] < IMAGE_HEIGHT){
-    	originPostPipeline[1][0] = IMAGE_HEIGHT;
-    }
-    if(xPostPipeline[0][0] < IMAGE_WIDTH){
-    	xPostPipeline[0][0] = IMAGE_WIDTH;
-    }
-    if(xPostPipeline[1][0] < IMAGE_HEIGHT){
-    	xPostPipeline[1][0] = IMAGE_HEIGHT;
-    }
-    if(yPostPipeline[0][0] < IMAGE_WIDTH){
-    	yPostPipeline[0][0] = IMAGE_WIDTH;
-    }
-    if(yPostPipeline[1][0] < IMAGE_HEIGHT){
-    	yPostPipeline[1][0] = IMAGE_HEIGHT;
-    }
-    if(zPostPipeline[0][0] < IMAGE_WIDTH){
-    	zPostPipeline[0][0] = IMAGE_WIDTH;
-    }
-    if(zPostPipeline[1][0] < IMAGE_HEIGHT){
-    	zPostPipeline[1][0] = IMAGE_HEIGHT;
-    }
-
-
     TypePixel origin, axisX, axisY, axisZ;
 
     origin.pX 	 = (int) originPostPipeline[0][0];
@@ -117,8 +91,11 @@ void display(void)
     axisZ.pY 	= (int) zPostPipeline[1][0];
     axisZ.color = colorAxisZ;	
 
+    std::cout << "Chegou até o DrawLine X \n";
     DrawLine(origin, axisX);
+    std::cout << "Chegou até o DrawLine Y \n";
     DrawLine(origin, axisY);
+    std::cout << "Chegou até o DrawLine Z \n";
     DrawLine(origin, axisZ);	
 
 	// ######################\\-------------------//######################### //
@@ -189,6 +166,8 @@ void display(void)
 	    DrawTriangle(p1, p2, p3);
 	    //| std::cout << "Terminou de desenhar \n";
 	}
+
+	glDisable(GL_TEXTURE_2D);
 
 	glFlush();
 	glutSwapBuffers();

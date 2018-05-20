@@ -1,5 +1,6 @@
 #include <math.h>
 #include "matrixoperations.h"
+#include "definitions.h"
 
 #ifndef _GRAPHIC_PIPELINE_H_
 #define _GRAPHIC_PIPELINE_H_
@@ -247,7 +248,7 @@ void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int heig
 	double verticesObjectSpace[4][1],    verticesWorldSpace[4][1],
 		   verticesCameraSpace[4][1], verticesClippingSpace[4][1],
 		   verticesCanonicalSpace[4][1];
-	double cameraPosition[3] = {0, 0, 1};
+	double cameraPosition[3] = {0, 0, 4};
 	double lookAt[3] 		= {0, 0, 0};
 	double up[3] 			= {0, 1, 0};
 	double homogeneosCoordinate = 1;
@@ -278,6 +279,11 @@ void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int heig
 	// a matriz view port
 	//| std::cout << "Iniciando mViewPort: \n";
 	mViewPort(output, &verticesCanonicalSpace, width, height);
+
+	if((*output)[0][0] > IMAGE_WIDTH)  (*output)[0][0] = IMAGE_WIDTH -1;
+	if((*output)[1][0] > IMAGE_HEIGHT) (*output)[1][0] = IMAGE_HEIGHT-1;
+	if((*output)[0][0] < 0) (*output)[0][0] = 0;
+	if((*output)[1][0] < 0) (*output)[1][0] = 0;
 }
 
 #endif // _GRAPHIC_PIPELINE_H_
