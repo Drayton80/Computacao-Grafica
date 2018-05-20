@@ -15,12 +15,14 @@ unsigned int ViewPortWidth  = 512;
 unsigned int ViewPortHeight = 512;
 
 //-----------------------------------------------------------------------------
-void display(void)
+void MyGlDraw(void)
 {
+	/*	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glFlush();
+	*/
 
 	// ###################################################################### //
 	// #######################// EXIBINDO OS EIXOS \\######################## //
@@ -92,11 +94,11 @@ void display(void)
     axisZ.color = colorAxisZ;	
 
     std::cout << "Chegou até o DrawLine X \n";
-    DrawLine(origin, axisX);
+    //DrawLine(origin, axisX);
     std::cout << "Chegou até o DrawLine Y \n";
-    DrawLine(origin, axisY);
+    //DrawLine(origin, axisY);
     std::cout << "Chegou até o DrawLine Z \n";
-    DrawLine(origin, axisZ);	
+    //DrawLine(origin, axisZ);	
 
 	// ######################\\-------------------//######################### //
 	// ###################################################################### //
@@ -161,17 +163,31 @@ void display(void)
 	    p3.pX = (int) vertexPostPipeline3[0][0];
 	    p3.pY = (int) vertexPostPipeline3[1][0];
 	    p3.color = c1;
-		
+
+	    /*
+	    glBegin(GL_TRIANGLES);
+
+		    glColor3f(0.5,0,0);
+
+		    glVertex2f(vertexPostPipeline1[0][0], vertexPostPipeline1[1][0]);
+		    glVertex2f(vertexPostPipeline2[0][0], vertexPostPipeline2[1][0]);
+		    glVertex2f(vertexPostPipeline3[0][0], vertexPostPipeline3[1][0]);
+
+	    glEnd();
+		*/
+
 	    //| std::cout << "Desenhou os pontos \n";
 	    DrawTriangle(p1, p2, p3);
 	    //| std::cout << "Terminou de desenhar \n";
 	}
 
-	glDisable(GL_TEXTURE_2D);
+	//glDisable(GL_TEXTURE_2D);
 
+	/*
 	glFlush();
 	glutSwapBuffers();
 	glutPostRedisplay();
+	*/
 }
 
 //-----------------------------------------------------------------------------
@@ -355,12 +371,14 @@ int main(int argc, char **argv)
 	InitOpenGL(&argc, argv);
 	InitCallBacks();
 	InitDataStructures();
-	glutDisplayFunc(display);
+
+	DrawFunc = MyGlDraw;
+	//glutDisplayFunc(display);
 	// Habilite esta função se você deseja imprimir na tela dados do modelo
 	// gerados durante a sua carga.
 	//PrintModelInfo(objData);
 
-	atexit(FreeMemFunc);
+	//atexit(FreeMemFunc);
 
 	glutMainLoop();
 

@@ -48,6 +48,16 @@ void PutPixel(TypePixel p){
 //de Bresenham
 void DrawLine(TypePixel p1, TypePixel p2){
     std::cout << "Instanciações: \n";
+
+    if(p1.pX > IMAGE_WIDTH) p1.pX = IMAGE_WIDTH-1;
+    if(p2.pX > IMAGE_WIDTH) p2.pX = IMAGE_WIDTH-1;
+    if(p1.pY > IMAGE_HEIGHT) p2.pY = IMAGE_HEIGHT-1;
+    if(p2.pY > IMAGE_HEIGHT) p2.pY = IMAGE_HEIGHT-1;
+    if(p1.pX < 0) p1.pX = 0;
+    if(p2.pX < 0) p2.pX = 0;
+    if(p1.pY < 0) p1.pY = 0;
+    if(p2.pY < 0) p2.pY = 0;
+
     //Primeiro vamos calcular o Delta entre os pontos
     int dX = (p2.pX - p1.pX);
     int dY = (p2.pY - p1.pY);
@@ -64,9 +74,9 @@ void DrawLine(TypePixel p1, TypePixel p2){
 
     
     dX = abs(dX);
-    std::cout << "dX = " << dX << "\n";
+    std::cout << "dX: " << dX << " = " << p2.pX << " - " << p1.pX << "\n";
     dY = abs(dY);
-    std::cout << "dY = " << dY << "\n";
+    std::cout << "dY: " << dY << " = " << p2.pY << " - " << p1.pY << "\n";
 
     //Agostd::cout << "dY = abs(dY) \n";ra vamos definir auxiliares para os pontos X e Y do Pixel inicial
     std::cout << "x = p1.px \n";
@@ -229,8 +239,11 @@ void DrawLineColor(TypePixel p1, TypePixel p2, TypePixel p3){
 
 //Definimos aqui uma função que faz a criação de triângulos na tela, chamando 3 DrawLine
 void DrawTriangle(TypePixel p1, TypePixel p2, TypePixel p3){
+    std::cout << "@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@ Linha de p1 até p2 @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@" << "\n";
     DrawLine(p1, p2);
+    std::cout << "@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@ Linha de p2 até p3 @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@" << "\n";
     DrawLine(p2, p3);
+    std::cout << "@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@ Linha de p3 até p1 @-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@-@" << "\n";
     DrawLine(p3, p1);
 }
 

@@ -17,6 +17,8 @@ void mModel(double (*vectorWorldSpace)[4][1], double (*vectorObjectSpace)[4][1])
     // Transformação do espaço de objeto para o do universo:
     //| std::cout << "\n @@ Aplicação da Matrix Model @@ \n";
 	multiplication(vectorWorldSpace, &matrixModel, vectorObjectSpace);
+
+	return;
 }
 
 // Cálcula os vetores da base da camera (eixo x, y e z de canera), constroem ela e, através da mesma,
@@ -57,7 +59,7 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
     // Vetor que resulta do produto vetorial:
 	double vetorProdutoVetorial[3][1];
 	//| std::cout << "Produto vetorial para o xCamera: \n";
-	produtoVetorial(&vetorProdutoVetorial, vetorUp, zCamera);
+	produtoVetorial(&vetorProdutoVetorial, &vetorUp, &zCamera);
 
 	// Se a coordenada estiver abaixo de 1e-160 (valor aproximado) e acima de 0, sua multiplicação ao quadrado
 	// (feita no moduloVetor) resultaria em 0 devido ao tão baixo valor que ultrapassaria o
@@ -112,7 +114,7 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 	// EIXO Y DA CAMERA:
     // Vetor que resulta do produto vetorial:
     //| std::cout << "Produto vetorial do yCamera: \n";
-	produtoVetorial(&vetorProdutoVetorial, zCamera, xCamera);
+	produtoVetorial(&vetorProdutoVetorial, &zCamera, &xCamera);
 
 	// Se a coordenada estiver abaixo de 1e-160 (valor aproximado) e acima de 0, sua multiplicação ao quadrado
 	// (feita no moduloVetor) resultaria em 0 devido ao tão baixo valor que ultrapassaria o
@@ -153,14 +155,14 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 
 	// CONSTRUINDO A MATRIX VIEW:
 	double matrixBt [4][4] = {{ xCamera[0][0],  xCamera[1][0],  xCamera[2][0],  0},
-							 { yCamera[0][0],  yCamera[1][0],  yCamera[2][0],  0},
-							 { zCamera[0][0],  zCamera[1][0],  zCamera[2][0],  0},
-							 {       0      ,        0      ,        0      ,  1}};
+							  { yCamera[0][0],  yCamera[1][0],  yCamera[2][0],  0},
+							  { zCamera[0][0],  zCamera[1][0],  zCamera[2][0],  0},
+							  {       0      ,        0      ,        0      ,  1}};
 
 	double matrixTrasposicao [4][4] = {{ 1,  0,  0, -cameraPosition[0]},
-	   						          { 0,  1,  0, -cameraPosition[1]},
-							    	  { 0,  0,  1, -cameraPosition[2]},
-							    	  { 0,  0,  0,          1        }};
+	   						           { 0,  1,  0, -cameraPosition[1]},
+							    	   { 0,  0,  1, -cameraPosition[2]},
+							    	   { 0,  0,  0,          1        }};
 
    	double matrixView[4][4];
 
@@ -170,6 +172,8 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
    	//| std::cout << "\n @@ Aplicação da Matrix View @@ \n";
    	multiplication(vectorCameraSpace, &matrixView, vectorWorldSpace);
 
+   	return;
+
 }
 
 // Os parâmetros de entrada são uma matriz que será alterada para representar o vetor no espaço de recorte,
@@ -178,14 +182,14 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 void mProjection(double (*vectorClippingSpace)[4][1], double (*vectorCameraSpace)[4][1], double d){
 	// Essa é uma matriz de translação que leva o centro focal para a origem	
 	double matrixT [4][4] = {{ 1,  0,  0,  0},
-						    { 0,  1,  0,  0},
-						    { 0,  0,  1,  d},
-						    { 0,  0,  0,  1}};
+						     { 0,  1,  0,  0},
+						     { 0,  0,  1,  d},
+						     { 0,  0,  0,  1}};
 
     // Essa matriz efetivamente aplica a distorção projetiva
-    double matrixP [4][4] = {{ 1,  0,  0  ,  0},
-						     { 0,  1,  0  ,  0},
-						     { 0,  0,  1  ,  0},
+    double matrixP [4][4] = {{ 1,  0,   0  ,  0},
+						     { 0,  1,   0  ,  0},
+						     { 0,  0,   1  ,  0},
 						     { 0,  0,(-1/d),  1}};
 
   	// Para obter a matriz de projeção basta multiplicar uma matriz
@@ -197,6 +201,8 @@ void mProjection(double (*vectorClippingSpace)[4][1], double (*vectorCameraSpace
     // por fim, aplica-se a transformação do espaço de camera para o de recorte
     //| std::cout << "\n @@ Aplicação da Matrix Projection @@ \n";
 	multiplication(vectorClippingSpace, &matrixProjection, vectorCameraSpace);
+
+	return;
 }
 
 // Recebe a largura e altura de tela, assim como as coordenadas do ponto no espaço 
@@ -208,23 +214,23 @@ void mViewPort(double (*vectorScreenSpace)[4][1], double (*vectorCanonicalSpace)
 	// 0,0 da tela fica no canto superior esquerdo (em vez do inferior esquerdo, como
 	// era nos demais espaços que trabalhamos até agora)	
 	double matrixInvertion [4][4] = {{  1,  0,  0,  0},
-						    		{  0, -1,  0,  0},
-						    		{  0,  0,  1,  0},
-						    		{  0,  0,  0,  1}};
+						    		 {  0, -1,  0,  0},
+						    		 {  0,  0,  1,  0},
+ 						    		 {  0,  0,  0,  1}};
 
     // Também é necessário escalar a imagem para que se adeque ao tamanho
 	// da tela (representado pelos parâmetros w(width) e h(height))
     double matrixScale [4][4] = {{ w/2,   0,  0,  0},
-						    	{   0, h/2,  0,  0},
-						    	{   0,   0,  1,  0},
-						    	{   0,   0,  0,  1}};
+						    	 {   0, h/2,  0,  0},
+						    	 {   0,   0,  1,  0},
+						    	 {   0,   0,  0,  1}};
 
 	// Por fim é preciso transladar para mover os pontos para não ficarem na
     // na origem como centro
     double matrixTranslation [4][4] = {{  1,  0,  0, (w-1)/2},
-						    		  {  0,  1,  0, (h-1)/2},
-						    		  {  0,  0,  1,     0  },
-						    		  {  0,  0,  0,     1  }};
+						    		   {  0,  1,  0, (h-1)/2},
+						    		   {  0,  0,  1,     0  },
+						    		   {  0,  0,  0,     1  }};
 
 
   	// Para obter a matriz view port basta multiplicar as matrizes obtidas
@@ -239,6 +245,8 @@ void mViewPort(double (*vectorScreenSpace)[4][1], double (*vectorCanonicalSpace)
     //| std::cout << "\n@-------------------@ Aplicação da Matrix View Port @---------------------@ \n";
 	multiplication(vectorScreenSpace, &matrixViewPort, vectorCanonicalSpace);
 	//| std::cout <<   "@-------------------@-------------------------------@---------------------@ \n";
+
+	return;
 }
 
 // Esse pipeline faz a passagem dos vertices dos triângulos para o espaço de tela
@@ -248,15 +256,15 @@ void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int heig
 	double verticesObjectSpace[4][1],    verticesWorldSpace[4][1],
 		   verticesCameraSpace[4][1], verticesClippingSpace[4][1],
 		   verticesCanonicalSpace[4][1];
-	double cameraPosition[3] = {0, 0, 4};
-	double lookAt[3] 		= {0, 0, 0};
-	double up[3] 			= {0, 1, 0};
+	double cameraPosition[3] = {0, 0, 2};
+	double lookAt[3] 		 = {0, 0, 0};
+	double up[3] 			 = {0, 1, 0};
 	double homogeneosCoordinate = 1;
-	double distanceNearPlane = 2;
+	double distanceNearPlane = 1;
 	
 
 	// Aqui transformamos os pontos para o espaço homogêneo:
-	for(int i = 0; i <= 2; i++){
+	for(int i = 0; i < 3; i++){
 		verticesObjectSpace[i][0] = (*input)[i][0] * homogeneosCoordinate;
 	}
 	// Adicionando a coordenada homogênea:
@@ -280,8 +288,8 @@ void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int heig
 	//| std::cout << "Iniciando mViewPort: \n";
 	mViewPort(output, &verticesCanonicalSpace, width, height);
 
-	if((*output)[0][0] > IMAGE_WIDTH)  (*output)[0][0] = IMAGE_WIDTH -1;
-	if((*output)[1][0] > IMAGE_HEIGHT) (*output)[1][0] = IMAGE_HEIGHT-1;
+	if((*output)[0][0] > IMAGE_WIDTH)  (*output)[0][0] = (double) IMAGE_WIDTH -1;
+	if((*output)[1][0] > IMAGE_HEIGHT) (*output)[1][0] = (double) IMAGE_HEIGHT-1;
 	if((*output)[0][0] < 0) (*output)[0][0] = 0;
 	if((*output)[1][0] < 0) (*output)[1][0] = 0;
 }

@@ -251,17 +251,17 @@ void division(double (*matrixResult)[4][1], double (*matrix)[4][1], double divid
 
 //-----------------------------------------double-TYPES--------------------------------------------//
 // Divide uma matriz por uma constante:
-void produtoVetorial(double (*vectorResult)[3][1], double vector1[3][1], double vector2[3][1]){
+void produtoVetorial(double (*vectorResult)[3][1], double (*vector1)[3][1], double (*vector2)[3][1]){
   	//| std::cout << "###Produto Vetorial###\n";
-  	(*vectorResult)[0][1] = vector1[2][1] * vector2[3][1] - ( vector2[2][1] * vector1[3][1] );
-  	//| std::cout << "[ " << (*vectorResult)[0][1] << " ] =  " << vector1[2][1] << " * " << vector2[3][1] << " - (" 
-  	//| 													   << vector2[2][1] << " * " << vector1[3][1] << ") \n";
-	(*vectorResult)[1][1] = vector1[3][1] * vector2[1][1] - ( vector2[3][1] * vector1[1][1] );
-	//| std::cout << "[ " << (*vectorResult)[1][1] << " ] =  " << vector1[3][1] << " * " << vector2[1][1] << " - (" 
-  	//| 													   << vector2[3][1] << " * " << vector1[1][1] << ") \n";
-	(*vectorResult)[2][1] = vector1[1][1] * vector2[2][1] - ( vector2[1][1] * vector1[2][1] );
-	//| std::cout << "[ " << (*vectorResult)[2][1] << " ] =  " << vector1[1][1] << " * " << vector2[2][1] << " - (" 
-  	//| 													   << vector2[1][1] << " * " << vector1[2][1] << ") \n";
+  	(*vectorResult)[0][1] = (*vector1)[2][1] * (*vector2)[3][1] - ( (*vector2)[2][1] * (*vector1)[3][1] );
+  	//| std::cout << "[ " << (*vectorResult)[0][1] << " ] =  " << (*vector1)[2][1] << " * " << (*vector2)[3][1] << " - (" 
+  	//| 													   << (*vector2)[2][1] << " * " << (*vector1)[3][1] << ") \n";
+	(*vectorResult)[1][1] = (*vector1)[3][1] * (*vector2)[1][1] - ( (*vector2)[3][1] * (*vector1)[1][1] );
+	//| std::cout << "[ " << (*vectorResult)[1][1] << " ] =  " << (*vector1)[3][1] << " * " << (*vector2)[1][1] << " - (" 
+  	//| 													   << (*vector2)[3][1] << " * " << (*vector1)[1][1] << ") \n";
+	(*vectorResult)[2][1] = (*vector1)[1][1] * (*vector2)[2][1] - ( (*vector2)[1][1] * (*vector1)[2][1] );
+	//| std::cout << "[ " << (*vectorResult)[2][1] << " ] =  " << (*vector1)[1][1] << " * " << (*vector2)[2][1] << " - (" 
+  	//| 													   << (*vector2)[1][1] << " * " << (*vector1)[2][1] << ") \n";
  }
 //------------------------------------------------------------------------------------------------//
 //################################################################################################//
