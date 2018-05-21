@@ -13,26 +13,26 @@ using namespace std;
 
 float angle = 0.0;
 
-mat4 matrixModel = mat4(vec4(1, 0, 0, 0),
-                 	    vec4(0, 1, 0, 0),
-                        vec4(0, 0, 1, 0),
-                        vec4(0, 0, 0, 1));
-mat4 matrixView = mat4(vec4(1, 0, 0, 0),
-                 	   vec4(0, 1, 0, 0),
-                       vec4(0, 0, 1, 0),
-                       vec4(0, 0, 0, 1));
-mat4 matrixProjection = mat4(vec4(1, 0, 0, 0),
-                 	    	 vec4(0, 1, 0, 0),
-                        	 vec4(0, 0, 1, 0),
-                        	 vec4(0, 0, 0, 1));
-mat4 matrixViewPort = mat4(vec4(1, 0, 0, 0),
+mat4 matrixIdentify = mat4(vec4(1, 0, 0, 0),
                  	       vec4(0, 1, 0, 0),
                            vec4(0, 0, 1, 0),
                            vec4(0, 0, 0, 1));
-mat4 matrixUnion = mat4(vec4(1, 0, 0, 0),
-                 	    vec4(0, 1, 0, 0),
-                        vec4(0, 0, 1, 0),
-                        vec4(0, 0, 0, 1));
+
+// OBS.: as matrizes iniciam igual a identidade, pois assim elas iniciam
+// 		 em um estado neutro onde sua não configuração prévia afete o resultado
+// 		 da matrixUnion ao ser executada em conjunto com as demais. Assim para
+// 		 exibir o pipeline sem uma das matriz ou apenas outras basta comentar
+// 		 a parte do código onde sua função de geração é chamada (como, mModel
+// 		 , mView, etc)
+mat4 matrixModel = matrixIdentify;
+
+mat4 matrixView = matrixIdentify;
+
+mat4 matrixProjection = matrixIdentify;
+
+mat4 matrixViewPort = matrixIdentify;
+
+mat4 matrixUnion = matrixIdentify;
 
 // Gera matriz model através da posição do objeto no espaço fornecida como
 // parâmetros de entrada. Além de saber se ela rodará ou não
@@ -47,22 +47,26 @@ void mModel(float x, float y, float z, int rotate){
 	                              vec4(0, 0, 1, 0),
 	                              vec4(x, y, z, 1));
 
-	// Uma matriz que serve para aplicar a rotação do objeto
-	// em torno do eixo y
-	mat4 matrixRotation =  mat4(vec4(cos(angle), 	0	, -sin(angle), 	  0	  ),
-                         	  	vec4(	  0	   , 	1	, 		0	 , 	  0	  ),
-                              	vec4(sin(angle), 	0	,  cos(angle), 	  0	  ),
-                              	vec4(	  0	   , 	0	, 		0	 , 	  1	  ));
+	mat4 matrixRotation = matrixIdentify;
+
+	// Caso haja roatação:
+	if(rotate == 1){
+		// Uma matriz que serve para aplicar a rotação do objeto
+		// em torno do eixo y
+		matrixRotation =  mat4(vec4(cos(angle), 	0	, -sin(angle), 	  0	  ),
+	                           vec4(	  0	  , 	1	, 		0	 , 	  0	  ),
+	                           vec4(sin(angle), 	0	,  cos(angle), 	  0	  ),
+	                           vec4(	  0	  , 	0	, 		0	 , 	  1	  ));
+
+		angle = angle + 0.1;
+	}
 
 	// Cálculo da Matriz Model: para que a rotação seja em torno do
 	// próprio eixo do objeto ela deve ocorrer primeiro, ou seja, ficar
 	// mais à direita na multiplicação de matrizes.
 	matrixModel = matrixTranslation * matrixRotation;
 
-	// Caso haja roatação:
-	if(rotate == 1){
-		angle = angle + 0.1;
-	}
+	
 
 	return;
 }
@@ -171,7 +175,7 @@ void mViewPort(int w, int h){
                    				vec4(0, 0, 0, 1));
 
 	// Para obter a matriz view port basta multiplicar as matrizes obtidas
-	matrixViewPort = matrixScale * matrixTranslation * matrixInvertion;
+	matrixViewPort = matrixTranslation * matrixScale; //* matrixInvertion;
 
 	return;
 }
@@ -182,11 +186,19 @@ void mViewPort(int w, int h){
 void mUnion(vec3 lookAt, vec3 up, vec3 position, float distanceNearPlane,
 		    float objX, float objY, float objZ , int rotate, int width, int height){
 
+	// Toda vez que a mUnion é chamada de novo, as matrizes tem que retornar a serem
+	// iguais a identidade, senão haverá interferência com multiplas chamadas.
+	matrixModel = matrixIdentify;
+	matrixView = matrixIdentify;
+	matrixProjection = matrixIdentify;
+	matrixViewPort = matrixIdentify;
+	matrixUnion = matrixIdentify;
+
 	// Geração das matrizes de mudança de espaço;
 	mModel(objX, objY, objZ, rotate);
 	mView(lookAt, up, position);
 	mProjection(distanceNearPlane);
-	//mViewPort(width, height);
+	mViewPort(width, height);
 
 	// Combinação de todas as matrizes do pipeline gráfico:
 	// OBS.: É possível combinar todas as matrizes do pipeline em uma só para só em
@@ -239,7 +251,6 @@ vec4 pipelineAplication(vec4 outputVertex, vec3 inputVertex, float distanceNearP
 	cout << "outputVertex.y = " << outputVertex.y << "\n";
 	cout << "outputVertex.z = " << outputVertex.z << "\n";
 	cout << "outputVertex.w = " << outputVertex.w << "\n";
-
 
 	return outputVertex;
 }

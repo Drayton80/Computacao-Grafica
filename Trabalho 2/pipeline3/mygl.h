@@ -106,10 +106,10 @@ void DrawLine(TypePixel p1, TypePixel p2){
         fR /= dX; fG /= dX; fB /= dX; fA /= dX;//Aqui é onde começa a interpolação das cores nas linhas
         for(cont = 0; cont < dX; cont++){
             //Interpolando as cores
-            aux.color.R += fR;
-            aux.color.G += fG;
-            aux.color.B += fB;
-            aux.color.A += fA;
+            //aux.color.R += fR;
+            //aux.color.G += fG;
+            //aux.color.B += fB;
+            //aux.color.A += fA;
             //---------------------
             aux.pX = x;
             std::cout << "valor de x: " << x << "\n";
@@ -130,10 +130,10 @@ void DrawLine(TypePixel p1, TypePixel p2){
         fR /= dY; fG /= dY; fB /= dY; fA /= dY;
         for(cont = 0; cont < dY; cont++){
             //------------------------
-            aux.color.R += fR;
-            aux.color.G += fG;
-            aux.color.B += fB;
-            aux.color.A += fA;
+            //aux.color.R += fR;
+            //aux.color.G += fG;
+            //aux.color.B += fB;
+            //aux.color.A += fA;
             //------------------------
             aux.pX = x;
             std::cout << "valor de x: " << x << "\n";

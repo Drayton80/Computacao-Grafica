@@ -35,7 +35,9 @@ void MyGlDraw(void)
 	glLoadIdentity();
 	glFlush();
 
-	mUnion (pointLookAt, vectorUP, pointPosition, distanceNearPlane, 0.0, 0.0, -2.0 , 1, IMAGE_WIDTH, IMAGE_HEIGHT);
+	// Formação e condesação das matrizes com objeto sem rotação e na origem para poder printar os eixos do sistema
+	// de coordenada 
+	mUnion (pointLookAt, vectorUP, pointPosition, distanceNearPlane, 0.0, 0.0, 0.0 , 0, IMAGE_WIDTH, IMAGE_HEIGHT);
 
 
 	// ###################################################################### //
@@ -61,9 +63,9 @@ void MyGlDraw(void)
 
     // Vértice pertencente aos eixos X, Y e Z:
    	vec3 originPoint = vec3(0, 0, 0);
-   	vec3 axisXPoint  = vec3(1, 0, 0);
-   	vec3 axisYPoint  = vec3(0, 1, 0);
-   	vec3 axisZPoint  = vec3(0, 0, 1);
+   	vec3 axisXPoint  = vec3(1.5, 0, 0);
+   	vec3 axisYPoint  = vec3(0, 1.5, 0);
+   	vec3 axisZPoint  = vec3(0, 0, 1.5);
 
     // Pontos após sua passagem pelo pipeline gráfico:
     vec4 originPostPipeline;
@@ -96,12 +98,16 @@ void MyGlDraw(void)
     axisZ.color = colorAxisZ;	
 
     // Desenha os eixos de coordenadas:
-    DrawLine(origin, axisX);
-    DrawLine(origin, axisY);
-    DrawLine(origin, axisZ);	
+    DrawLine(axisX, origin);
+    DrawLine(axisY, origin);
+    DrawLine(axisZ, origin);	
 
 	// ######################\\-------------------//######################### //
 	// ###################################################################### //
+
+    // Agora a matriz union está configurada para exibir um objeto deslocado -2 em seu eixo z e rodando em torno de
+    // seu próprio eixo (relativo ao eixo y)
+	mUnion (pointLookAt, vectorUP, pointPosition, distanceNearPlane, 0.0, 0.0, -2.0 , 1, IMAGE_WIDTH, IMAGE_HEIGHT);
 
 	// Vértice pertencente aos triangulos do arquivo .obj:
     vec3 vertexObj1;
@@ -148,8 +154,8 @@ void MyGlDraw(void)
 	    // Definindo a coloração:
 	    //| std::cout << "Chegou até as cores \n";
 	    TypeColor c1;
-	    c1.R = 0;
-	    c1.G = 0;
+	    c1.R = 255;
+	    c1.G = 255;
 	    c1.B = 255;
 	    c1.A = 255;
 
@@ -181,7 +187,7 @@ void MyGlDraw(void)
 		*/
 
 	    //| std::cout << "Desenhou os pontos \n";
-	    //DrawTriangle(p1, p2, p3);
+	    DrawTriangle(p1, p2, p3);
 	    //| std::cout << "Terminou de desenhar \n";
 	}
 
