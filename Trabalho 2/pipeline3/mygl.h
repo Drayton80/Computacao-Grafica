@@ -54,11 +54,12 @@ void DrawLine(TypePixel p1, TypePixel p2){
     if(p2.pX > IMAGE_WIDTH) p2.pX = IMAGE_WIDTH-1;
     if(p1.pY > IMAGE_HEIGHT) p2.pY = IMAGE_HEIGHT-1;
     if(p2.pY > IMAGE_HEIGHT) p2.pY = IMAGE_HEIGHT-1;
-     */
+    
     if(p1.pX < 0) p1.pX = 0;
     if(p2.pX < 0) p2.pX = 0;
     if(p1.pY < 0) p1.pY = 0;
     if(p2.pY < 0) p2.pY = 0;
+    */
    
 
     //Primeiro vamos calcular o Delta entre os pontos

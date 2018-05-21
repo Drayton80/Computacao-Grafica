@@ -1,4 +1,7 @@
 #include <math.h>
+#include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include "matrixoperations.h"
 #include "definitions.h"
 
@@ -10,9 +13,9 @@
 void mModel(double (*vectorWorldSpace)[4][1], double (*vectorObjectSpace)[4][1]){
 
 	double matrixModel [4][4] = {{ 1,  0,  0,  0},
-							    { 0,  1,  0,  0},
-							    { 0,  0,  1, -2},
-							    { 0,  0,  0,  1}};
+							     { 0,  1,  0,  0},
+							     { 0,  0,  1, -2},
+							     { 0,  0,  0,  1}};
 
     // Transformação do espaço de objeto para o do universo:
     //| std::cout << "\n @@ Aplicação da Matrix Model @@ \n";
@@ -29,8 +32,8 @@ void mView(double (*vectorCameraSpace)[4][1], double (*vectorWorldSpace)[4][1],
 	// EIXO Z DA CAMERA:
 	// Construindo o vetor no formato utilizado em matrixoperations.h:
 	double dVector[3][1] = {{lookAt[0] - cameraPosition[0]},
-						   {lookAt[1] - cameraPosition[1]},
-						   {lookAt[2] - cameraPosition[2]}};
+						    {lookAt[1] - cameraPosition[1]},
+						    {lookAt[2] - cameraPosition[2]}};
 	// Obtendo o módulo do vetor d (direction):
 	double moduloVetor = sqrt((dVector[0][0]*dVector[0][0]) + (dVector[1][0]*dVector[1][0]) + (dVector[2][0]*dVector[2][0]));
 	//| std::cout << "dVector[0][0]: " << (dVector[0][0]*dVector[0][0]) << " = " << dVector[0][0] << " * " << dVector[0][0] << "\n";
@@ -261,6 +264,7 @@ void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int heig
 	double up[3] 			 = {0, 1, 0};
 	double homogeneosCoordinate = 1;
 	double distanceNearPlane = 1;
+	double w = (1-(*input)[2][0])/distanceNearPlane;
 	
 
 	// Aqui transformamos os pontos para o espaço homogêneo:
@@ -282,7 +286,7 @@ void pipeline(double (*output)[4][1], double (*input)[3][1], int width, int heig
 	// Em seguida é preciso dividir os valores pela coordenada homogênea que leva para
 	// o espaço canônico
 	//| std::cout << "Iniciando divisão do espaço Canônico: \n";
-	division(&verticesCanonicalSpace, &verticesClippingSpace, -1/distanceNearPlane);
+	division(&verticesCanonicalSpace, &verticesClippingSpace, w);
 	// Por fim, apenas foi necessário passar pelo último estágio do pipeline ao aplicar
 	// a matriz view port
 	//| std::cout << "Iniciando mViewPort: \n";

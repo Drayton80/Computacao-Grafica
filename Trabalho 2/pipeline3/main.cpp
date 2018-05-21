@@ -1,3 +1,7 @@
+#include <math.h>
+#include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <GL/gl.h>
 #include <GL/glut.h>
 #include <iostream>
@@ -8,21 +12,30 @@
 #include "mygl.h"
 #include "main.h"
 
+using namespace glm;
+
 // Ponteiro para o objeto que carregará o modelo 3D (formato OBJ).
 objLoader *objData;
 
 unsigned int ViewPortWidth  = 512;
 unsigned int ViewPortHeight = 512;
 
+float distanceNearPlane = 1;
+
+vec3 pointPosition = vec3( 0, 0, 2);
+vec3 pointLookAt   = vec3( 0, 0,-2);
+vec3 vectorUP 	   = vec3( 0, 1, 0);
+
 //-----------------------------------------------------------------------------
 void MyGlDraw(void)
-{
-	/*	
+{	
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glFlush();
-	*/
+
+	mUnion (pointLookAt, vectorUP, pointPosition, distanceNearPlane, 0.0, 0.0, -2.0 , 1, IMAGE_WIDTH, IMAGE_HEIGHT);
+
 
 	// ###################################################################### //
 	// #######################// EXIBINDO OS EIXOS \\######################## //
@@ -46,75 +59,61 @@ void MyGlDraw(void)
     colorAxisZ.A = 255;
 
     // Vértice pertencente aos eixos X, Y e Z:
-    double originPoint[3][1] = {{0},
-    				  		    {0},
-    						    {0}};
-
-    double axisPointX[3][1] = {{1},
-    						   {0},
-    						   {0}};
-
-    double axisPointY[3][1] = {{0},
-    						   {1},
-    						   {0}};
-
-    double axisPointZ[3][1] = {{0},
-    						   {0},
-    						   {1}};
+   	vec3 originPoint = vec3(0, 0, 0);
+   	vec3 axisXPoint  = vec3(1, 0, 0);
+   	vec3 axisYPoint  = vec3(0, 1, 0);
+   	vec3 axisZPoint  = vec3(0, 0, 1);
 
     // Pontos após sua passagem pelo pipeline gráfico:
-    double originPostPipeline[4][1];
-    double xPostPipeline[4][1];
-    double yPostPipeline[4][1];
-    double zPostPipeline[4][1];
+    vec4 originPostPipeline;
+    vec4 axisXPostPipeline;
+    vec4 axisYPostPipeline;
+    vec4 axisZPostPipeline;
 
     // Passando os vértices para o pipeline:
-    //| std::cout << "Chegou até o pipeline \n";
-    pipeline(&originPostPipeline, &originPoint, IMAGE_WIDTH, IMAGE_HEIGHT);
-    pipeline(&xPostPipeline		, &axisPointX , IMAGE_WIDTH, IMAGE_HEIGHT);
-    pipeline(&yPostPipeline		, &axisPointY , IMAGE_WIDTH, IMAGE_HEIGHT);
-    pipeline(&zPostPipeline		, &axisPointZ , IMAGE_WIDTH, IMAGE_HEIGHT);
+    originPostPipeline = pipelineAplication(originPostPipeline, originPoint, distanceNearPlane);
+    axisXPostPipeline  = pipelineAplication(axisXPostPipeline , axisXPoint , distanceNearPlane);
+    axisYPostPipeline  = pipelineAplication(axisYPostPipeline , axisYPoint , distanceNearPlane);
+    axisZPostPipeline  = pipelineAplication(axisZPostPipeline , axisZPoint , distanceNearPlane);
 
     TypePixel origin, axisX, axisY, axisZ;
 
-    origin.pX 	 = (int) originPostPipeline[0][0];
-    origin.pY 	 = (int) originPostPipeline[1][0];
+    origin.pX 	 = (int) originPostPipeline.x;
+    origin.pY 	 = (int) originPostPipeline.y;
     origin.color = colorAxisX;
 
-    axisX.pX 	= (int) xPostPipeline[0][0];
-    axisX.pY 	= (int) xPostPipeline[1][0];
+    axisX.pX 	= (int) axisXPostPipeline.x;
+    axisX.pY 	= (int) axisXPostPipeline.y;
     axisX.color = colorAxisX;
 
-    axisY.pX 	= (int) yPostPipeline[0][0];
-    axisY.pY 	= (int) yPostPipeline[1][0];
+    axisY.pX 	= (int) axisYPostPipeline.x;
+    axisY.pY 	= (int) axisYPostPipeline.y;
     axisY.color = colorAxisY;
 
-    axisZ.pX 	= (int) zPostPipeline[0][0];
-    axisZ.pY 	= (int) zPostPipeline[1][0];
+    axisZ.pX 	= (int) axisZPostPipeline.x;
+    axisZ.pY 	= (int) axisZPostPipeline.y;
     axisZ.color = colorAxisZ;	
 
-    std::cout << "Chegou até o DrawLine X \n";
-    //DrawLine(origin, axisX);
-    std::cout << "Chegou até o DrawLine Y \n";
-    //DrawLine(origin, axisY);
-    std::cout << "Chegou até o DrawLine Z \n";
-    //DrawLine(origin, axisZ);	
+    // Desenha os eixos de coordenadas:
+    DrawLine(origin, axisX);
+    DrawLine(origin, axisY);
+    DrawLine(origin, axisZ);	
 
 	// ######################\\-------------------//######################### //
 	// ###################################################################### //
 
 	// Vértice pertencente aos triangulos do arquivo .obj:
-    double vertexObj1[3][1];
-    double vertexObj2[3][1];
-    double vertexObj3[3][1];
+    vec3 vertexObj1;
+    vec3 vertexObj2;
+    vec3 vertexObj3;
     // Vértice após sua passagem pelo pipeline gráfico:
-    double vertexPostPipeline1[4][1];
-    double vertexPostPipeline2[4][1];
-    double vertexPostPipeline3[4][1];
+    vec4 vertexPostPipeline1;
+    vec4 vertexPostPipeline2;
+    vec4 vertexPostPipeline3;
 
     //| std::cout << "Iniciando o FOR \n";
 	//| std::cout << "Entrou no GLLines \n";
-	for(int i=0; i<objData->faceCount; i++){
+	for(int i=0; i < objData->faceCount; i++){
 	    //| std::cout << "\n\n\n&&&&&&&&&&&&&&&&&&&&&&&&&&&" << (i+1) << "ª Iteração do For &&&&&&&&&&&&&&&&&&&&&&&&& \n";
 	    //| std::cout << "Pegando o objeto \n";
 	    obj_face *o = objData->faceList[i];
@@ -123,23 +122,23 @@ void MyGlDraw(void)
 	    // pelo professor
 	    //| std::cout << "Chegou até os vértices \n";
 	    //| std::cout << "1 \n";
-	    vertexObj1[0][0] = objData->vertexList[o->vertex_index[0]]->e[0]; // Coordenada X
-	    vertexObj1[1][0] = objData->vertexList[o->vertex_index[0]]->e[1]; // Coordenada Y
-	    vertexObj1[2][0] = objData->vertexList[o->vertex_index[0]]->e[2]; // Coordenada Z
+	    vertexObj1.x = objData->vertexList[o->vertex_index[0]]->e[0]; // Coordenada X
+	    vertexObj1.y = objData->vertexList[o->vertex_index[0]]->e[1]; // Coordenada Y
+	    vertexObj1.z = objData->vertexList[o->vertex_index[0]]->e[2]; // Coordenada Z
 	    //| std::cout << "2\n";
-	    vertexObj2[0][0] = objData->vertexList[o->vertex_index[1]]->e[0]; // Coordenada X
-	    vertexObj2[1][0] = objData->vertexList[o->vertex_index[1]]->e[1]; // Coordenada Y
-	    vertexObj2[2][0] = objData->vertexList[o->vertex_index[1]]->e[2]; // Coordenada Z
+	    vertexObj2.x = objData->vertexList[o->vertex_index[1]]->e[0]; // Coordenada X
+	    vertexObj2.y = objData->vertexList[o->vertex_index[1]]->e[1]; // Coordenada Y
+	    vertexObj2.z = objData->vertexList[o->vertex_index[1]]->e[2]; // Coordenada Z
 	    //| std::cout << "3 \n";
-	    vertexObj3[0][0] = objData->vertexList[o->vertex_index[2]]->e[0]; // Coordenada X
-	    vertexObj3[1][0] = objData->vertexList[o->vertex_index[2]]->e[1]; // Coordenada Y
-	    vertexObj3[2][0] = objData->vertexList[o->vertex_index[2]]->e[2]; // Coordenada Z
+	    vertexObj3.x = objData->vertexList[o->vertex_index[2]]->e[0]; // Coordenada X
+	    vertexObj3.y = objData->vertexList[o->vertex_index[2]]->e[1]; // Coordenada Y
+	    vertexObj3.z = objData->vertexList[o->vertex_index[2]]->e[2]; // Coordenada Z
 
 	    // Passando os vértices para o pipeline:
 	    //| std::cout << "Chegou até o pipeline \n";
-	    pipeline(&vertexPostPipeline1, &vertexObj1, IMAGE_WIDTH, IMAGE_HEIGHT);
-	    pipeline(&vertexPostPipeline2, &vertexObj2, IMAGE_WIDTH, IMAGE_HEIGHT);
-	    pipeline(&vertexPostPipeline3, &vertexObj3, IMAGE_WIDTH, IMAGE_HEIGHT);
+	    vertexPostPipeline1 = pipelineAplication(vertexPostPipeline1, vertexObj1, distanceNearPlane);
+	    vertexPostPipeline2 = pipelineAplication(vertexPostPipeline2, vertexObj2, distanceNearPlane);
+	    vertexPostPipeline3 = pipelineAplication(vertexPostPipeline3, vertexObj3, distanceNearPlane);
 
 	    // Definindo a coloração:
 	    //| std::cout << "Chegou até as cores \n";
@@ -152,16 +151,16 @@ void MyGlDraw(void)
 	    TypePixel p1, p2, p3;
 
 	    //| std::cout << "Instanciou os pontos \n";
-	    p1.pX = (int) vertexPostPipeline1[0][0];
-	    p1.pY = (int) vertexPostPipeline1[1][0];
+	    p1.pX = (int) vertexPostPipeline1.x;
+	    p1.pY = (int) vertexPostPipeline1.y;
 	    p1.color = c1;		
 
-	    p2.pX = (int) vertexPostPipeline2[0][0];
-	    p2.pY = (int) vertexPostPipeline2[1][0];
+	    p2.pX = (int) vertexPostPipeline2.x;
+	    p2.pY = (int) vertexPostPipeline2.y;
 	    p2.color = c1;
 		
-	    p3.pX = (int) vertexPostPipeline3[0][0];
-	    p3.pY = (int) vertexPostPipeline3[1][0];
+	    p3.pX = (int) vertexPostPipeline3.x;
+	    p3.pY = (int) vertexPostPipeline3.y;
 	    p3.color = c1;
 
 	    /*
