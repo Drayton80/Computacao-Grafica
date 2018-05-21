@@ -41,8 +41,6 @@ void mModel(float x, float y, float z, int rotate){
 	// OBS.: Nas matrizes do glm declaradas com vec4, cada vec 
 	//		 representa uma coluna ao em vez de uma linha
 
-	//x += incrementTranslation;
-
 	// Uma matriz de translação para posicionar o objeto no universo e
 	// para que seja possível fazer a rotação ao longo desse eixo
 	mat4 matrixTranslation = mat4(vec4(1, 0, 0, 0),
@@ -61,7 +59,7 @@ void mModel(float x, float y, float z, int rotate){
 	                           vec4(sin(angle), 	0	,  cos(angle), 	  0	  ),
 	                           vec4(	  0	  , 	0	, 		0	 , 	  1	  ));
 
-		angle = angle + 0.001;
+		angle = angle + 0.01;
 	}
 
 	// Cálculo da Matriz Model: para que a rotação seja em torno do
