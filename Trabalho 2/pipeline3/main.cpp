@@ -23,7 +23,7 @@ unsigned int ViewPortHeight = 512;
 float distanceNearPlane = 1;
 
 vec3 pointPosition = vec3( 0, 0, 2);
-vec3 pointLookAt   = vec3( 0, 0,-2);
+vec3 pointLookAt   = vec3( 0, 0, 0);
 vec3 vectorUP 	   = vec3( 0, 1, 0);
 
 //-----------------------------------------------------------------------------

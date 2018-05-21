@@ -97,10 +97,10 @@ void mView(vec3 lookAt, vec3 up, vec3 position){
 
 	// CONSTRUINDO A MATRIX VIEW:
 	// Matriz que passa os vértices para do espaço do universo para o de câmera
-	mat4 matrixBt = mat4(vec4( xCamera, 0),
-                 		 vec4( yCamera, 0),
-                  		 vec4( zCamera, 0),
-                  		 vec4(0, 0, 0, 1));
+	mat4 matrixBt = mat4(vec4( xCamera.x, yCamera.x, zCamera.x, 0),
+                 		 vec4( xCamera.y, yCamera.y, zCamera.y, 0)),
+                  		 vec4( xCamera.z, yCamera.z, zCamera.z, 0)),
+                  		 vec4(         0,         0,         0, 1));
 	// Matriz que movimenta a câmera de sua posição original para a origem:
 	mat4 matrixT = mat4(vec4(			1, 			 0, 		  0, 	0),
                   		vec4(		   	0, 			 1, 		  0, 	0),
@@ -108,7 +108,7 @@ void mView(vec3 lookAt, vec3 up, vec3 position){
                   		vec4( -position.x, -position.y, -position.z, 	1));
 
 	// Combina as matrizes Bt e T através de uma multiplicação:
-	matrixView = transpose(matrixBt) * matrixT; 
+	matrixView = matrixBt * matrixT; 
 
    	return;
 
