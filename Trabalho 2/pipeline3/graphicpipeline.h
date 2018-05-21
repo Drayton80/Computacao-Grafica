@@ -6,17 +6,33 @@
 #include "definitions.h"
 
 using namespace glm;
+using namespace std;
 
 #ifndef _GRAPHIC_PIPELINE_H_
 #define _GRAPHIC_PIPELINE_H_
 
 float angle = 0.0;
 
-mat4 matrixModel;
-mat4 matrixView;
-mat4 matrixProjection;
-mat4 matrixViewPort;
-mat4 matrixUnion;
+mat4 matrixModel = mat4(vec4(1, 0, 0, 0),
+                 	    vec4(0, 1, 0, 0),
+                        vec4(0, 0, 1, 0),
+                        vec4(0, 0, 0, 1));
+mat4 matrixView = mat4(vec4(1, 0, 0, 0),
+                 	   vec4(0, 1, 0, 0),
+                       vec4(0, 0, 1, 0),
+                       vec4(0, 0, 0, 1));
+mat4 matrixProjection = mat4(vec4(1, 0, 0, 0),
+                 	    	 vec4(0, 1, 0, 0),
+                        	 vec4(0, 0, 1, 0),
+                        	 vec4(0, 0, 0, 1));
+mat4 matrixViewPort = mat4(vec4(1, 0, 0, 0),
+                 	       vec4(0, 1, 0, 0),
+                           vec4(0, 0, 1, 0),
+                           vec4(0, 0, 0, 1));
+mat4 matrixUnion = mat4(vec4(1, 0, 0, 0),
+                 	    vec4(0, 1, 0, 0),
+                        vec4(0, 0, 1, 0),
+                        vec4(0, 0, 0, 1));
 
 // Gera matriz model através da posição do objeto no espaço fornecida como
 // parâmetros de entrada. Além de saber se ela rodará ou não
@@ -170,7 +186,7 @@ void mUnion(vec3 lookAt, vec3 up, vec3 position, float distanceNearPlane,
 	mModel(objX, objY, objZ, rotate);
 	mView(lookAt, up, position);
 	mProjection(distanceNearPlane);
-	mViewPort(width, height);
+	//mViewPort(width, height);
 
 	// Combinação de todas as matrizes do pipeline gráfico:
 	// OBS.: É possível combinar todas as matrizes do pipeline em uma só para só em
@@ -188,10 +204,20 @@ vec4 pipelineAplication(vec4 outputVertex, vec3 inputVertex, float distanceNearP
 	//float wCoordinate = (1 - inputVertex.z) / distanceNearPlane;
 	// Passagem dos vétores para o espaço homogêneo:
 	vec4 pipelineVertex;
-	pipelineVertex.x = pipelineVertex.x * homogeneosCoordinate;
-	pipelineVertex.y = pipelineVertex.y * homogeneosCoordinate;
-	pipelineVertex.z = pipelineVertex.z * homogeneosCoordinate;
+
+	cout << "inputVertex.x = " << inputVertex.x << "\n";
+	cout << "inputVertex.y = " << inputVertex.y << "\n";
+	cout << "inputVertex.z = " << inputVertex.z << "\n";
+
+	pipelineVertex.x = inputVertex.x * homogeneosCoordinate;
+	pipelineVertex.y = inputVertex.y * homogeneosCoordinate;
+	pipelineVertex.z = inputVertex.z * homogeneosCoordinate;
 	pipelineVertex.w = homogeneosCoordinate;
+
+	cout << "pipelineVertex.x = " << pipelineVertex.x << "\n";
+	cout << "pipelineVertex.y = " << pipelineVertex.y << "\n";
+	cout << "pipelineVertex.z = " << pipelineVertex.z << "\n";
+	cout << "pipelineVertex.w = " << pipelineVertex.w << "\n";
 
 
 	// Aplica a transformação ao longo do pipeline:
@@ -208,7 +234,12 @@ vec4 pipelineAplication(vec4 outputVertex, vec3 inputVertex, float distanceNearP
 	outputVertex.y = outputVertex.y / outputVertex.w;
 	outputVertex.z = outputVertex.z / outputVertex.w;
 	outputVertex.w = outputVertex.w / outputVertex.w;
-	
+
+	cout << "outputVertex.x = " << outputVertex.x << "\n";
+	cout << "outputVertex.y = " << outputVertex.y << "\n";
+	cout << "outputVertex.z = " << outputVertex.z << "\n";
+	cout << "outputVertex.w = " << outputVertex.w << "\n";
+
 
 	return outputVertex;
 }

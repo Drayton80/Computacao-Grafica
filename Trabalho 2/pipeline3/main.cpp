@@ -18,8 +18,8 @@ using namespace std;
 // Ponteiro para o objeto que carregará o modelo 3D (formato OBJ).
 objLoader *objData;
 
-unsigned int ViewPortWidth  = 512;
-unsigned int ViewPortHeight = 512;
+//unsigned int ViewPortWidth  = 512;
+//unsigned int ViewPortHeight = 512;
 
 float distanceNearPlane = 1;
 
@@ -181,7 +181,7 @@ void MyGlDraw(void)
 		*/
 
 	    //| std::cout << "Desenhou os pontos \n";
-	    DrawTriangle(p1, p2, p3);
+	    //DrawTriangle(p1, p2, p3);
 	    //| std::cout << "Terminou de desenhar \n";
 	}
 
