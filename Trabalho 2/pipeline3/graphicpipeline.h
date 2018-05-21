@@ -98,8 +98,8 @@ void mView(vec3 lookAt, vec3 up, vec3 position){
 	// CONSTRUINDO A MATRIX VIEW:
 	// Matriz que passa os vértices para do espaço do universo para o de câmera
 	mat4 matrixBt = mat4(vec4( xCamera.x, yCamera.x, zCamera.x, 0),
-                 		 vec4( xCamera.y, yCamera.y, zCamera.y, 0)),
-                  		 vec4( xCamera.z, yCamera.z, zCamera.z, 0)),
+                 		 vec4( xCamera.y, yCamera.y, zCamera.y, 0),
+                  		 vec4( xCamera.z, yCamera.z, zCamera.z, 0),
                   		 vec4(         0,         0,         0, 1));
 	// Matriz que movimenta a câmera de sua posição original para a origem:
 	mat4 matrixT = mat4(vec4(			1, 			 0, 		  0, 	0),
@@ -185,7 +185,7 @@ void mUnion(vec3 lookAt, vec3 up, vec3 position, float distanceNearPlane,
 vec4 pipelineAplication(vec4 outputVertex, vec3 inputVertex, float distanceNearPlane){
 	// Atribuições:
 	float homogeneosCoordinate = 1;
-	float wCoordinate = (1 - inputVertex.z) / distanceNearPlane;
+	//float wCoordinate = (1 - inputVertex.z) / distanceNearPlane;
 	// Passagem dos vétores para o espaço homogêneo:
 	vec4 pipelineVertex;
 	pipelineVertex.x = pipelineVertex.x * homogeneosCoordinate;
@@ -193,14 +193,22 @@ vec4 pipelineAplication(vec4 outputVertex, vec3 inputVertex, float distanceNearP
 	pipelineVertex.z = pipelineVertex.z * homogeneosCoordinate;
 	pipelineVertex.w = homogeneosCoordinate;
 
+
 	// Aplica a transformação ao longo do pipeline:
 	outputVertex = matrixUnion * pipelineVertex;
 
 	// Divisão de w para normalizar todas as coordenadas:
+	/*
 	outputVertex.x = outputVertex.x / wCoordinate;
 	outputVertex.y = outputVertex.y / wCoordinate;
 	outputVertex.z = outputVertex.z / wCoordinate;
 	outputVertex.w = outputVertex.w / wCoordinate;
+	*/
+	outputVertex.x = outputVertex.x / outputVertex.w;
+	outputVertex.y = outputVertex.y / outputVertex.w;
+	outputVertex.z = outputVertex.z / outputVertex.w;
+	outputVertex.w = outputVertex.w / outputVertex.w;
+	
 
 	return outputVertex;
 }

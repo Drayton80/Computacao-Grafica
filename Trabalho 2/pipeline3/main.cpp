@@ -13,6 +13,7 @@
 #include "main.h"
 
 using namespace glm;
+using namespace std;
 
 // Ponteiro para o objeto que carregará o modelo 3D (formato OBJ).
 objLoader *objData;
@@ -140,6 +141,10 @@ void MyGlDraw(void)
 	    vertexPostPipeline2 = pipelineAplication(vertexPostPipeline2, vertexObj2, distanceNearPlane);
 	    vertexPostPipeline3 = pipelineAplication(vertexPostPipeline3, vertexObj3, distanceNearPlane);
 
+	    cout << "vertexPostPipeline1: x = " << vertexPostPipeline1.x << "; y = " << vertexPostPipeline1.y << endl;
+	    cout << "vertexPostPipeline2: x = " << vertexPostPipeline2.x << "; y = " << vertexPostPipeline2.y << endl;
+	    cout << "vertexPostPipeline3: x = " << vertexPostPipeline3.x << "; y = " << vertexPostPipeline3.y << endl;
+
 	    // Definindo a coloração:
 	    //| std::cout << "Chegou até as cores \n";
 	    TypeColor c1;
@@ -168,9 +173,9 @@ void MyGlDraw(void)
 
 		    glColor3f(0.5,0,0);
 
-		    glVertex2f(vertexPostPipeline1[0][0], vertexPostPipeline1[1][0]);
-		    glVertex2f(vertexPostPipeline2[0][0], vertexPostPipeline2[1][0]);
-		    glVertex2f(vertexPostPipeline3[0][0], vertexPostPipeline3[1][0]);
+		    glVertex2f(vertexPostPipeline1.x, vertexPostPipeline1.y);
+		    glVertex2f(vertexPostPipeline2.x, vertexPostPipeline2.y);
+		    glVertex2f(vertexPostPipeline3.x, vertexPostPipeline3.y);
 
 	    glEnd();
 		*/
