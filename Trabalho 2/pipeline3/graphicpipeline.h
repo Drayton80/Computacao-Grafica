@@ -108,7 +108,7 @@ void mView(vec3 lookAt, vec3 up, vec3 position){
                   		vec4( -position.x, -position.y, -position.z, 	1));
 
 	// Combina as matrizes Bt e T através de uma multiplicação:
-	matrixView = matrixBt * matrixT; 
+	matrixView = transpose(matrixBt) * matrixT; 
 
    	return;
 
@@ -146,7 +146,7 @@ void mViewPort(int w, int h){
 	mat4 matrixScale = mat4(vec4(w/2,   0,  0,  0),
            				  	vec4(  0, h/2,  0,  0),
            				  	vec4(  0,   0,  1,  0),
-           				  	vec4(  1,   1,  0,  1));
+           				  	vec4(  0,   0,  0,  1));
 	// É preciso fazer uma escala e inverter o Y da imagem pois usualmente o pixel
 	// 0,0 da tela fica no canto superior esquerdo
 	mat4 matrixInvertion = mat4(vec4(1, 0, 0, 0),
