@@ -12,6 +12,7 @@ using namespace std;
 #define _GRAPHIC_PIPELINE_H_
 
 float angle = 0.0;
+float incrementTranslation = 0;
 
 mat4 matrixIdentify = mat4(vec4(1, 0, 0, 0),
                  	       vec4(0, 1, 0, 0),
@@ -40,6 +41,8 @@ void mModel(float x, float y, float z, int rotate){
 	// OBS.: Nas matrizes do glm declaradas com vec4, cada vec 
 	//		 representa uma coluna ao em vez de uma linha
 
+	//x += incrementTranslation;
+
 	// Uma matriz de translação para posicionar o objeto no universo e
 	// para que seja possível fazer a rotação ao longo desse eixo
 	mat4 matrixTranslation = mat4(vec4(1, 0, 0, 0),
@@ -58,7 +61,7 @@ void mModel(float x, float y, float z, int rotate){
 	                           vec4(sin(angle), 	0	,  cos(angle), 	  0	  ),
 	                           vec4(	  0	  , 	0	, 		0	 , 	  1	  ));
 
-		angle = angle + 0.1;
+		angle = angle + 0.001;
 	}
 
 	// Cálculo da Matriz Model: para que a rotação seja em torno do
@@ -66,7 +69,7 @@ void mModel(float x, float y, float z, int rotate){
 	// mais à direita na multiplicação de matrizes.
 	matrixModel = matrixTranslation * matrixRotation;
 
-	
+	//incrementTranslation += 0.01;
 
 	return;
 }
@@ -174,6 +177,7 @@ void mViewPort(int w, int h){
                    				vec4(0, 0, 1, 0),
                    				vec4(0, 0, 0, 1));
 
+	// Nesse caso a inversão apenas fazia a imagem ser exibida efetivamente invertida
 	// Para obter a matriz view port basta multiplicar as matrizes obtidas
 	matrixViewPort = matrixTranslation * matrixScale; //* matrixInvertion;
 
@@ -217,19 +221,19 @@ vec4 pipelineAplication(vec4 outputVertex, vec3 inputVertex, float distanceNearP
 	// Passagem dos vétores para o espaço homogêneo:
 	vec4 pipelineVertex;
 
-	cout << "inputVertex.x = " << inputVertex.x << "\n";
-	cout << "inputVertex.y = " << inputVertex.y << "\n";
-	cout << "inputVertex.z = " << inputVertex.z << "\n";
+	//|cout << "inputVertex.x = " << inputVertex.x << "\n";
+	//|cout << "inputVertex.y = " << inputVertex.y << "\n";
+	//|cout << "inputVertex.z = " << inputVertex.z << "\n";
 
 	pipelineVertex.x = inputVertex.x * homogeneosCoordinate;
 	pipelineVertex.y = inputVertex.y * homogeneosCoordinate;
 	pipelineVertex.z = inputVertex.z * homogeneosCoordinate;
 	pipelineVertex.w = homogeneosCoordinate;
 
-	cout << "pipelineVertex.x = " << pipelineVertex.x << "\n";
-	cout << "pipelineVertex.y = " << pipelineVertex.y << "\n";
-	cout << "pipelineVertex.z = " << pipelineVertex.z << "\n";
-	cout << "pipelineVertex.w = " << pipelineVertex.w << "\n";
+	//|cout << "pipelineVertex.x = " << pipelineVertex.x << "\n";
+	//|cout << "pipelineVertex.y = " << pipelineVertex.y << "\n";
+	//|cout << "pipelineVertex.z = " << pipelineVertex.z << "\n";
+	//|cout << "pipelineVertex.w = " << pipelineVertex.w << "\n";
 
 
 	// Aplica a transformação ao longo do pipeline:
@@ -247,10 +251,10 @@ vec4 pipelineAplication(vec4 outputVertex, vec3 inputVertex, float distanceNearP
 	outputVertex.z = outputVertex.z / outputVertex.w;
 	outputVertex.w = outputVertex.w / outputVertex.w;
 
-	cout << "outputVertex.x = " << outputVertex.x << "\n";
-	cout << "outputVertex.y = " << outputVertex.y << "\n";
-	cout << "outputVertex.z = " << outputVertex.z << "\n";
-	cout << "outputVertex.w = " << outputVertex.w << "\n";
+	//|cout << "outputVertex.x = " << outputVertex.x << "\n";
+	//|cout << "outputVertex.y = " << outputVertex.y << "\n";
+	//|cout << "outputVertex.z = " << outputVertex.z << "\n";
+	//|cout << "outputVertex.w = " << outputVertex.w << "\n";
 
 	return outputVertex;
 }

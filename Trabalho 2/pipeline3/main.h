@@ -15,6 +15,8 @@ void display(void)
 {
 	DrawFunc();
 
+	std::cout << "TÁ DENTRO DA DISPLAY\n";
+
 	// Copia o framebuffer para a textura.
 	glBindTexture(GL_TEXTURE_2D, tex);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, IMAGE_WIDTH, IMAGE_HEIGHT, 0, GL_RGBA, GL_UNSIGNED_BYTE, FBptr);

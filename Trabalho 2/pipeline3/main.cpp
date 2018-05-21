@@ -30,11 +30,6 @@ vec3 vectorUP 	   = vec3( 0, 1, 0);
 //-----------------------------------------------------------------------------
 void MyGlDraw(void)
 {	
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glLoadIdentity();
-	glFlush();
-
 	// Formação e condesação das matrizes com objeto sem rotação e na origem para poder printar os eixos do sistema
 	// de coordenada 
 	mUnion (pointLookAt, vectorUP, pointPosition, distanceNearPlane, 0.0, 0.0, 0.0 , 0, IMAGE_WIDTH, IMAGE_HEIGHT);
@@ -128,15 +123,15 @@ void MyGlDraw(void)
 	    // Coordenadas de um vértice entregues pelo código de importação do .obj fornecido
 	    // pelo professor
 	    //| std::cout << "Chegou até os vértices \n";
-	    //| std::cout << "1 \n";
+	    
 	    vertexObj1.x = objData->vertexList[o->vertex_index[0]]->e[0]; // Coordenada X
 	    vertexObj1.y = objData->vertexList[o->vertex_index[0]]->e[1]; // Coordenada Y
 	    vertexObj1.z = objData->vertexList[o->vertex_index[0]]->e[2]; // Coordenada Z
-	    //| std::cout << "2\n";
+	   
 	    vertexObj2.x = objData->vertexList[o->vertex_index[1]]->e[0]; // Coordenada X
 	    vertexObj2.y = objData->vertexList[o->vertex_index[1]]->e[1]; // Coordenada Y
 	    vertexObj2.z = objData->vertexList[o->vertex_index[1]]->e[2]; // Coordenada Z
-	    //| std::cout << "3 \n";
+	    
 	    vertexObj3.x = objData->vertexList[o->vertex_index[2]]->e[0]; // Coordenada X
 	    vertexObj3.y = objData->vertexList[o->vertex_index[2]]->e[1]; // Coordenada Y
 	    vertexObj3.z = objData->vertexList[o->vertex_index[2]]->e[2]; // Coordenada Z
@@ -147,9 +142,9 @@ void MyGlDraw(void)
 	    vertexPostPipeline2 = pipelineAplication(vertexPostPipeline2, vertexObj2, distanceNearPlane);
 	    vertexPostPipeline3 = pipelineAplication(vertexPostPipeline3, vertexObj3, distanceNearPlane);
 
-	    cout << "vertexPostPipeline1: x = " << vertexPostPipeline1.x << "; y = " << vertexPostPipeline1.y << endl;
-	    cout << "vertexPostPipeline2: x = " << vertexPostPipeline2.x << "; y = " << vertexPostPipeline2.y << endl;
-	    cout << "vertexPostPipeline3: x = " << vertexPostPipeline3.x << "; y = " << vertexPostPipeline3.y << endl;
+	    //|cout << "vertexPostPipeline1: x = " << vertexPostPipeline1.x << "; y = " << vertexPostPipeline1.y << endl;
+	    //|cout << "vertexPostPipeline2: x = " << vertexPostPipeline2.x << "; y = " << vertexPostPipeline2.y << endl;
+	    //|cout << "vertexPostPipeline3: x = " << vertexPostPipeline3.x << "; y = " << vertexPostPipeline3.y << endl;
 
 	    // Definindo a coloração:
 	    //| std::cout << "Chegou até as cores \n";
@@ -174,30 +169,10 @@ void MyGlDraw(void)
 	    p3.pY = (int) vertexPostPipeline3.y;
 	    p3.color = c1;
 
-	    /*
-	    glBegin(GL_TRIANGLES);
-
-		    glColor3f(0.5,0,0);
-
-		    glVertex2f(vertexPostPipeline1.x, vertexPostPipeline1.y);
-		    glVertex2f(vertexPostPipeline2.x, vertexPostPipeline2.y);
-		    glVertex2f(vertexPostPipeline3.x, vertexPostPipeline3.y);
-
-	    glEnd();
-		*/
-
 	    //| std::cout << "Desenhou os pontos \n";
 	    DrawTriangle(p1, p2, p3);
 	    //| std::cout << "Terminou de desenhar \n";
 	}
-
-	//glDisable(GL_TEXTURE_2D);
-
-	/*
-	glFlush();
-	glutSwapBuffers();
-	glutPostRedisplay();
-	*/
 }
 
 //-----------------------------------------------------------------------------
@@ -383,6 +358,7 @@ int main(int argc, char **argv)
 	InitDataStructures();
 
 	DrawFunc = MyGlDraw;
+
 	//glutDisplayFunc(display);
 	// Habilite esta função se você deseja imprimir na tela dados do modelo
 	// gerados durante a sua carga.
