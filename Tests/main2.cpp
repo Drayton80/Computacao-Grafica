@@ -1,7 +1,5 @@
 #include <GL/gl.h>
 #include <GL/glut.h>
-#include <stdlib.h>
-#include <math.h>
 
 //angle of rotation
 float xpos = 0, ypos = 0, zpos = 0, xrot = 0, yrot = 0, angle=0.0;
